@@ -13,14 +13,15 @@ $(document).ready(function() {
         })
     ;
     // chart sub-models (ie. xAxis, yAxis, etc) when accessed directly, return themselves, not the parent chart, so need to chain separately
+    chart.options.title = "hi";
     chart.xAxis
-        .axisLabel("Time (s)")
+        .axisLabel("Words per pasuk")
         .tickFormat(d3.format(',d'))
-        .staggerLabels(true)
+        .staggerLabels(false)
     ;
     chart.yAxis
-        .axisLabel('Voltage (v)')
-        .tickFormat(d3.format(',d'))
+        .axisLabel('Average number of trop')
+        .tickFormat(d3.format('g.3'))
     ;
 
     d3.select('#chart').append('svg')
@@ -66,9 +67,33 @@ function multiSeriesData(data) {
         return {
             'key': label,
             'values': $.map(values, function(row, pos) {
-                return [[row[0],row[index+1]]];
+                // return [[row[0],row[index+1]]];
+                return {'x': row[0], 'y': row[index+1]}
             })
         };
     });
     return output;
+}
+
+function sincos() {
+  var sin = [],
+      cos = [];
+
+  for (var i = 0; i < 100; i++) {
+    sin.push({x: i, y: Math.sin(i/10)});
+    cos.push({x: i, y: .5 * Math.cos(i/10)});
+  }
+
+  return [
+    {
+      values: sin,
+      key: 'Sine Wave',
+      color: '#ff7f0e'
+    },
+    {
+      values: cos,
+      key: 'Cosine Wave',
+      color: '#2ca02c'
+    }
+  ];
 }
