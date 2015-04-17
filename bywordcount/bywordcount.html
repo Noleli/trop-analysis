@@ -3,50 +3,23 @@
 <head>
 	<meta charset="utf-8">
 	<title>chart</title>
-	<link rel="stylesheet" type="text/css" href="nv.d3.min.css">
-<style>
-        text {
-            font: 12px sans-serif;
-        }
-        svg {
-            display: block;
-        }
-        html, body, #chart, svg {
-            margin: 0px;
-            padding: 0px;
-            height: 100%;
-            width: 100%;
-        }
-        #chartcontainer {
-        	width: 500px;
-        	height: 400px;
-        	text-align: center;
-        	font-family: sans-serif;
-        }
-    </style>
-    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
-    <script type="text/javascript" src="d3.min.js" charset="utf-8"></script>
-	<script src="nv.d3.min.js"></script>
-	<script src="bywordcount.js"></script>
+    <link href="//assets.noahliebman.net/nvd3/nv.d3.min.css" rel="stylesheet" type="text/css" />
+	<link rel="stylesheet" type="text/css" href="bywordcount.css" />
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script>window.jQuery || document.write('<script src="{{site.assets}}/jquery-1.7.1.min.js"><\/script>')</script>
+    
 </head>
 <body>
 
-<!--<chart type="line"
-	width="500"
-	height="400"
-	legend="true"
-	tooltips="true">
-  <data id="data">
-  </data>
-</chart>-->
+    <div id="bywordcount_chartcontainer">
+        <h2>Trop counts by word count</h2>
+        <div id="bywordcount_chart">
+
+        </div>
+    </div>
 
 
-<div id="chartcontainer">
-<h2>Title</h2>
-<div id="chart">
-
-</div>
-</div>
-
+    <script src="bywordcount.js"></script>
+	
 </body>
 </html>

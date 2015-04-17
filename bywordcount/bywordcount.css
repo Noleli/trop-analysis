@@ -1,0 +1,23 @@
+text {
+    font: 12px sans-serif;
+}
+svg {
+    display: block;
+}
+#bywordcount_chart, svg {
+    margin: 0px;
+    padding: 0px;
+    height: 100%;
+    width: 100%;
+}
+#bywordcount_chartcontainer {
+	width: 500px;
+	height: 400px;
+	text-align: center;
+	font-family: "Helvetica", sans-serif;
+}
+#bywordcount_chartcontainer h2 {
+	margin-bottom: 0;
+    font-size: 18px;
+    font-weight: normal;
+}

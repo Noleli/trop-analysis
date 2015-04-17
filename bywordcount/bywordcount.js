@@ -1,37 +1,65 @@
 $(document).ready(function() {
-  $.get("bywordcount.csv", function(d) {
-    // console.log(typeof(d));
-    thedata = multiSeriesData(processData(extractData(d))); //$("#data").text(d);
-    console.log(thedata);
-    // nvd3_tags.options.x_end = 32;
-    // nvd3_tags.renderAll();
-    nv.addGraph(function() {
-    chart = nv.models.lineChart()
-        .options({
+    $.getScript("//assets.noahliebman.net/d3/d3.min.js", function() {
+        $.getScript("//assets.noahliebman.net/nvd3/nv.d3.min.js", doTheGraphThing);
+    });
+});
+
+function doTheGraphThing() {
+    $.get("/post-uploads/trop/bywordcount.csv", function(d) {
+        thedata = multiSeriesData(processData(extractData(d))); //$("#data").text(d);
+        // console.log(thedata);
+        nv.addGraph(function() {
+        var chart = nv.models.lineChart()
+            .options({
             transitionDuration: 300,
             useInteractiveGuideline: true
-        })
-    ;
-    // chart sub-models (ie. xAxis, yAxis, etc) when accessed directly, return themselves, not the parent chart, so need to chain separately
-    chart.options.title = "hi";
-    chart.xAxis
-        .axisLabel("Words per pasuk")
-        .tickFormat(d3.format(',d'))
-        .staggerLabels(false)
-    ;
-    chart.yAxis
-        .axisLabel('Average number of trop')
-        .tickFormat(d3.format('g.3'))
-    ;
+        });
 
-    d3.select('#chart').append('svg')
-        .datum(thedata)
-        .call(chart);
-    nv.utils.windowResize(chart.update);
+        // chart sub-models (ie. xAxis, yAxis, etc) when accessed directly, return themselves, not the parent chart, so need to chain separately
+        chart.xAxis
+            .axisLabel("Words per pasuk")
+            .tickFormat(d3.format(',d'))
+            .staggerLabels(false);
+
+        chart.yAxis
+            .axisLabel('Average number of trop')
+            .tickFormat(d3.format('.3g'));
+
+        var chartElt = document.getElementById("bywordcount_chart");
+        // console.log(d3.select(chartElt));
+        var thesvg = d3.select(chartElt).append("svg:svg");
+        var thedatums = thesvg.datum(thedata);
+        console.log(thedatums);
+        // console.log(chart);
+        console.log(thedatums.call(chart));
+        nv.utils.windowResize(chart.update);
+
+
+
+
+      // set up which series are displayed. surely there's a less hacky way of doing this.
+      var click = new MouseEvent('click', {
+        'view': window,
+        'bubbles': true,
+        'cancelable': true
+      });
+      var doubleClick = new MouseEvent('dblclick', {
+        'view': window,
+        'bubbles': true,
+        'cancelable': true
+      });
+      
+      $(".nv-series")[1].dispatchEvent(doubleClick); // show just the etnakhta
+      $(".nv-series")[9].dispatchEvent(click);
+      $(".nv-series")[13].dispatchEvent(click);
+      $(".nv-series")[22].dispatchEvent(click);
+
+
+
     return chart;
-});
   });
- });
+  });
+}
 
 
 function extractData(csvtext) {
@@ -75,25 +103,31 @@ function multiSeriesData(data) {
     return output;
 }
 
-function sincos() {
-  var sin = [],
-      cos = [];
-
-  for (var i = 0; i < 100; i++) {
-    sin.push({x: i, y: Math.sin(i/10)});
-    cos.push({x: i, y: .5 * Math.cos(i/10)});
-  }
-
-  return [
-    {
-      values: sin,
-      key: 'Sine Wave',
-      color: '#ff7f0e'
-    },
-    {
-      values: cos,
-      key: 'Cosine Wave',
-      color: '#2ca02c'
-    }
-  ];
+// for IE
+if (typeof MouseEvent !== 'function') {
+    (function (){
+        var _MouseEvent = window.MouseEvent;
+        window.MouseEvent = function (type, dict){
+            dict = dict | {};
+            var event = document.createEvent('MouseEvents');
+            event.initMouseEvent(
+                    type,
+                    (typeof dict.bubbles == 'undefined') ? true : !!dict.bubbles,
+                    (typeof dict.cancelable == 'undefined') ? false : !!dict.cancelable,
+                    dict.view || window,
+                    dict.detail | 0,
+                    dict.screenX | 0,
+                    dict.screenY | 0,
+                    dict.clientX | 0,
+                    dict.clientY | 0,
+                    !!dict.ctrlKey,
+                    !!dict.altKey,
+                    !!dict.shiftKey,
+                    !!dict.metaKey,
+                    dict.button | 0,
+                    dict.relatedTarget || null
+            );
+            return event;
+        }
+    })();
 }
