@@ -1,0 +1,31 @@
+svg {
+    overflow: visible;
+    unicode-bidi: embed;
+    font-family: sans-serif;
+}
+
+.node rect {
+    fill: transparent;
+    stroke: #000;
+    stroke-width: 4px;
+}
+
+.node text {
+    stroke: none;
+    fill: #000;
+}
+
+.node text.tropchar {
+    font-size: 70px;
+    font-family: "Times New Roman";
+}
+
+.node text.count {
+    /*font-fa*/
+}
+
+.link {
+    stroke-width: 2px;
+    stroke: #333;
+    fill: none;
+}
