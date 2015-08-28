@@ -1,9 +1,7 @@
-var width = window.innerWidth,
-    height = window.innerHeight;
+// var width = window.innerWidth,
+//     height = window.innerHeight;
 
-var x = d3.scale.linear()
-    .domain([0, width])
-    .range([width, 0]);
+
 
 var hspace = 20,
     vspace = 10;
@@ -23,6 +21,11 @@ var tree = d3.layout.tree()
 // tree.nodeSize = function() {return [100, 100]; // setting this manually since I'm not using tree() anymore
 
 height = 27 * (tree.nodeSize()[1] + vspace);
+width = tree.nodeSize()[0] + hspace;
+
+var x = d3.scale.linear()
+    .domain([0, width])
+    .range([width, 0]);
 
 var svg = d3.select("#vizcontainer").append("svg")
     .attr("width", width)
@@ -82,22 +85,34 @@ function update() {
 
     var node = svg.selectAll("g.node").data(nodes, function(d) { return [d.name, d.depth] }) // .filter(function(d) { return d.depth <= 1 }).sort(tree.sort)
     node.enter().append("g")
-            .attr("class", "node")
-            .attr("transform", pos);
+            .attr("class", "node");
 
     node.on("click", function(d) {
         // console.log("click");
         expand(d);
+        width += tree.nodeSize()[0] + hspace;
+        x.domain([0, width]);
+        x.range([width, 0]);
+        svg.attr("width", width);
         // if(d.depth > 0)
         // nodes = nodes.filter(function(n) { return n.depth < d.depth});
+        
+        // push all existing nodes to the right in preperation for widening the svg
+        nodes.forEach(function(d) {
+            d.x += tree.nodeSize()[0] + hspace;
+        });
         d.children.forEach(function(d, i) {
             d.x = x(d.depth * (hspace + tree.nodeSize()[0])) - tree.nodeSize()[0];
             d.y = i*(vspace + tree.nodeSize()[1]);
         });
         nodes = nodes.concat(d.children); //.sort(function(a,b) { return b.count - a.count }));
-        links = tree.links(nodes);
+        // links = links.concat(tree.links(d.children).filter(function(n) { n.source.name == d.name && n.source.depth == d.depth; }));
+        // console.log(d.children);
+        links = links.concat(tree.links(nodes));
         update();
     });
+
+    node.attr("transform", pos);
 
     node.append("rect")
         .attr("width", tree.nodeSize()[0]).attr("height", tree.nodeSize()[1]);
@@ -114,7 +129,7 @@ function update() {
         .attr("dy", tree.nodeSize()[1]/2+30)
         .text(function(d) { return d.count; });
 
-        node.append("text")
+    node.append("text")
         .attr("class", "count")
         .attr("dx", 70)
         .attr("dy", tree.nodeSize()[1]/2+10)
@@ -123,18 +138,19 @@ function update() {
     node.exit().remove();
 
     var link = svg.selectAll("path.link")
-        .data(links, function(d) { return [d.name, d.depth] })
-        .enter().append("path")
-            .attr("class", "link")
-            .attr("d", linkline)
-            .attr("transform", "translate(0," + (tree.nodeSize()[1]/2) + ")");
-
+        .data(links); //, function(d) { return [d.name, d.depth] })
+    
+    link.enter().append("path")
+            .attr("class", "link");
+            // .attr("transform", "translate(0," + (tree.nodeSize()[1]/2) + ")");
+    link.attr("d", linkline);
+    link.exit().remove();
 }
 
 function collapse(d) {
     if (d.children) {
         d._children = d.children;
-        d._children.forEach(collapse);
+        // d._children.forEach(collapse);
         d.children = null;
     }
 }
@@ -142,7 +158,7 @@ function collapse(d) {
 function expand(d) {
     if (d._children) {
         d.children = d._children.sort(function(a,b) { return b.count - a.count });
-        // d.children.forEach(expand);
+        d.children.forEach(collapse);
         d._children = null;
     }
 }
