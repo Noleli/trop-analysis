@@ -10,9 +10,16 @@ svg {
     stroke-width: 4px;
 }
 
+.node.disabled rect {
+    stroke: #999;
+}
+
 .node text {
     stroke: none;
     fill: #000;
+}
+.node.disabled text {
+    fill: #999;
 }
 
 .node text.tropchar {
@@ -28,4 +35,8 @@ svg {
     stroke-width: 2px;
     stroke: #333;
     fill: none;
+}
+
+.link.disabled {
+    stroke: #eee;
 }

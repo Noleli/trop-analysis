@@ -3,7 +3,7 @@
 
 
 
-var hspace = 40,
+var hspace = 60,
     vspace = 10;
 
 // function troptree() {
@@ -41,7 +41,7 @@ var linkline = function(d) {
     var endy = (d.target.y+tree.nodeSize()[1]/2);
     var startx = d.source.x;
     var endx = d.target.x + tree.nodeSize()[0];
-    var pathstr = "M" + startx + " " + starty + "C " + (startx-hspace/3) + " " + starty + ", " + (endx+hspace/3) + " " + endy + ", " + endx + " " + endy;
+    var pathstr = "M" + startx + " " + starty + "C " + (startx-hspace/2) + " " + starty + ", " + (endx+hspace/2) + " " + endy + ", " + endx + " " + endy;
     return pathstr;
 }
 var jsonobj; // temp
@@ -72,6 +72,8 @@ d3.json("sequencetree-d3format.json", function(root) {
             d._children = d.children;
             d.children = null;
         }
+        d.disabled = false;
+        d.clicked = false;
         d.x = x(d.depth * (hspace + tree.nodeSize()[0])) - tree.nodeSize()[0];
         d.y = i*(vspace + tree.nodeSize()[1]); // - d.depth*(vspace + tree.nodeSize()[1]);
     });
@@ -96,32 +98,10 @@ function update() {
     node.enter().append("g")
             .attr("class", "node");
 
-    node.on("click", function(d) {
-        // console.log("click");
-        expand(d);
-        width += tree.nodeSize()[0] + hspace;
-        x.domain([0, width]);
-        x.range([width, 0]);
-        svg.attr("width", width);
-        // if(d.depth > 0)
-        // nodes = nodes.filter(function(n) { return n.depth < d.depth});
-        
-        // push all existing nodes to the right in preperation for widening the svg
-        nodes.forEach(function(d) {
-            d.x += tree.nodeSize()[0] + hspace;
-        });
-        d.children.forEach(function(d, i) {
-            d.x = x(d.depth * (hspace + tree.nodeSize()[0])) - tree.nodeSize()[0];
-            d.y = i*(vspace + tree.nodeSize()[1]);
-        });
-        nodes = nodes.concat(d.children); //.sort(function(a,b) { return b.count - a.count }));
-        // links = links.concat(tree.links(d.children).filter(function(n) { n.source.name == d.name && n.source.depth == d.depth; }));
-        // console.log(d.children);
-        links = links.concat(tree.links(nodes));
-        update();
-    });
+    node.on("click", nodeclick);
 
     node.attr("transform", pos);
+    node.classed("disabled", function(d) { return d.disabled });
 
     node.append("rect")
         .attr("width", tree.nodeSize()[0]).attr("height", tree.nodeSize()[1]);
@@ -153,7 +133,41 @@ function update() {
             .attr("class", "link");
             // .attr("transform", "translate(0," + (tree.nodeSize()[1]/2) + ")");
     link.attr("d", linkline);
+    link.classed("disabled", linkclass);
     link.exit().remove();
+}
+
+function linkclass(d) {
+    return d.target.disabled;
+}
+
+function nodeclick(d) {
+    // console.log("click");
+    if(d.children || d._children) {
+        d.clicked = true;
+        expand(d);
+        width += tree.nodeSize()[0] + hspace;
+        x.domain([0, width]);
+        x.range([width, 0]);
+        svg.attr("width", width);
+        // if(d.depth > 0)
+        // nodes = nodes.filter(function(n) { return n.depth < d.depth});
+        
+        // push all existing nodes to the right in preperation for widening the svg
+        nodes.forEach(function(n) {
+            n.x += tree.nodeSize()[0] + hspace;
+            if(!n.clicked) n.disabled = true;
+        });
+        d.children.forEach(function(d, i) {
+            d.x = x(d.depth * (hspace + tree.nodeSize()[0])) - tree.nodeSize()[0];
+            d.y = i*(vspace + tree.nodeSize()[1]);
+        });
+        nodes = nodes.concat(d.children); //.sort(function(a,b) { return b.count - a.count }));
+        // links = links.concat(tree.links(d.children).filter(function(n) { n.source.name == d.name && n.source.depth == d.depth; }));
+        // console.log(d.children);
+        links = links.concat(tree.links(nodes));
+        update();
+    }
 }
 
 function collapse(d) {
