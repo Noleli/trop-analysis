@@ -3,7 +3,7 @@
 
 
 
-var hspace = 20,
+var hspace = 40,
     vspace = 10;
 
 // function troptree() {
@@ -34,7 +34,16 @@ var svg = d3.select("#vizcontainer").append("svg")
 
 var nodes = []
 var links;
-var linkline = d3.svg.diagonal();
+// var linkline = d3.svg.diagonal();
+var linkline = function(d) {
+    // console.log(d); ok, so it has d.source and d.target
+    var starty = (d.source.y+tree.nodeSize()[1]/2);
+    var endy = (d.target.y+tree.nodeSize()[1]/2);
+    var startx = d.source.x;
+    var endx = d.target.x + tree.nodeSize()[0];
+    var pathstr = "M" + startx + " " + starty + "C " + (startx-hspace/3) + " " + starty + ", " + (endx+hspace/3) + " " + endy + ", " + endx + " " + endy;
+    return pathstr;
+}
 var jsonobj; // temp
     // .projection(function(d) { return [d.y, d.x]; });
 
