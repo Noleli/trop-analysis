@@ -34,6 +34,7 @@ var svg = d3.select("#vizcontainer").append("svg")
 
 var nodes = []
 var links;
+var depthsums = d3.map([], function(s) { return s.depth });
 // var linkline = d3.svg.diagonal();
 var linkline = function(d) {
     // console.log(d); ok, so it has d.source and d.target
@@ -47,6 +48,8 @@ var linkline = function(d) {
 var jsonobj; // temp
     // .projection(function(d) { return [d.y, d.x]; });
 
+var probformat = d3.format(".1%");
+
 d3.json("sequencetree-d3format.json", function(root) {
     // jsonobj = root;
     // console.log(root);
@@ -58,6 +61,9 @@ d3.json("sequencetree-d3format.json", function(root) {
     nodes.sort(function(a,b) { return b.count - a.count });
     // nodes = tree.nodes(root[0])
     //     .sort(function(a,b) { return b.count - a.count });
+
+    var depthsum = depthsums.get(0) ? depthsums.get(0) : depthsums.set(0, d3.sum(nodes.map(function(d) { return d.count })));
+
     nodes.forEach(function(d, i) {
         // d.x = x(d.depth * (hspace + tree.nodeSize()[0])) - tree.nodeSize()[0];
         // d.y = i*(vspace + tree.nodeSize()[1]);
@@ -76,6 +82,8 @@ d3.json("sequencetree-d3format.json", function(root) {
         d.clicked = false;
         d.x = x(d.depth * (hspace + tree.nodeSize()[0])) - tree.nodeSize()[0];
         d.y = i*(vspace + tree.nodeSize()[1]); // - d.depth*(vspace + tree.nodeSize()[1]);
+
+        d.prob = d.count/depthsum;
     });
     links = tree.links(nodes);
 
@@ -94,7 +102,7 @@ function update() {
         return "translate(" + d.x + ", " + d.y + ")";
     }
 
-    var node = svg.selectAll("g.node").data(nodes, function(d) { return [d.name, d.depth] }) // .filter(function(d) { return d.depth <= 1 }).sort(tree.sort)
+    var node = svg.selectAll("g.node").data(nodes, function(d) { return ancestry(d) }) // .filter(function(d) { return d.depth <= 1 }).sort(tree.sort)
     node.enter().append("g")
             .attr("class", "node");
 
@@ -119,7 +127,13 @@ function update() {
         .text(function(d) { return d.count; });
 
     node.append("text")
-        .attr("class", "count")
+        .attr("class", "prob")
+        .attr("dx", 50)
+        .attr("dy", tree.nodeSize()[1]/2-20)
+        .text(function(d) { return probformat(d.prob); });
+
+    node.append("text")
+        .attr("class", "name")
         .attr("dx", 70)
         .attr("dy", tree.nodeSize()[1]/2+10)
         .text(function(d) { return d.name; });
@@ -141,39 +155,84 @@ function linkclass(d) {
     return d.target.disabled;
 }
 
+function ancestry(n, s) {
+    if(s == undefined) {
+        s = n.name;
+    }
+    if(n.parent != undefined) {
+        s += "," + n.parent.name;
+        return ancestry(n.parent, s);
+    }
+    // else {
+    else return s;
+    // }
+}
+
 function nodeclick(d) {
-    // console.log("click");
+    nodes = nodes.filter(function(n) { return n.depth <= d.depth });
     if(d.children || d._children) {
-        d.clicked = true;
-        expand(d);
-        width += tree.nodeSize()[0] + hspace;
+        width = (d3.max(nodes.map(function(d) { return d.depth })) + 2) * (tree.nodeSize()[0] + hspace);
         x.domain([0, width]);
         x.range([width, 0]);
         svg.attr("width", width);
+
+        nodes.forEach(function(n) {
+            // n.x += tree.nodeSize()[0] + hspace;
+            n.x = x(n.depth * (hspace + tree.nodeSize()[0])) - tree.nodeSize()[0];
+            
+            if(!n.clicked) n.disabled = true;
+
+            if(n.depth == d.depth && n != d) {
+                n.clicked = false;
+                n.disabled = true;
+                collapse(n);
+                links = links.filter(function(l) { return l.source != n});
+                // width 
+            }
+        });
+
+        d.disabled = false;
+        d.clicked = true;
+        expand(d);
+        // width += tree.nodeSize()[0] + hspace;
+
         // if(d.depth > 0)
         // nodes = nodes.filter(function(n) { return n.depth < d.depth});
         
         // push all existing nodes to the right in preperation for widening the svg
-        nodes.forEach(function(n) {
-            n.x += tree.nodeSize()[0] + hspace;
-            if(!n.clicked) n.disabled = true;
-        });
+        // console.log(d3.sum(d.children.map(function(n) { return n.count })));
+        // console.log(d.depth);
+        var depthsum = depthsums.get(d.depth+1) ? depthsums.get(d.depth+1) : depthsums.set(d.depth+1, d3.sum(d.children.map(function(n) { return n.count })));
+        
         d.children.forEach(function(d, i) {
             d.x = x(d.depth * (hspace + tree.nodeSize()[0])) - tree.nodeSize()[0];
             d.y = i*(vspace + tree.nodeSize()[1]);
+
+            d.prob = d.count/depthsum;
         });
         nodes = nodes.concat(d.children); //.sort(function(a,b) { return b.count - a.count }));
         // links = links.concat(tree.links(d.children).filter(function(n) { n.source.name == d.name && n.source.depth == d.depth; }));
         // console.log(d.children);
-        links = links.concat(tree.links(nodes));
-        update();
+        // links = links.concat(tree.links(nodes));
+        links = tree.links(nodes);
     }
+    else {
+        d.clicked = true;
+        d.disabled = false;
+
+        width = (d3.max(nodes.map(function(d) { return d.depth })) + 2) * (tree.nodeSize()[0] + hspace);
+        x.domain([0, width]);
+        x.range([width, 0]);
+        svg.attr("width", width);
+    }
+    links = tree.links(nodes);
+    update();
 }
 
 function collapse(d) {
     if (d.children) {
         d._children = d.children;
-        // d._children.forEach(collapse);
+        d._children.forEach(collapse);
         d.children = null;
     }
 }
