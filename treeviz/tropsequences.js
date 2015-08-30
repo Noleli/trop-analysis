@@ -202,7 +202,8 @@ function nodeclick(d) {
         // push all existing nodes to the right in preperation for widening the svg
         // console.log(d3.sum(d.children.map(function(n) { return n.count })));
         // console.log(d.depth);
-        var depthsum = depthsums.get(d.depth+1) ? depthsums.get(d.depth+1) : depthsums.set(d.depth+1, d3.sum(d.children.map(function(n) { return n.count })));
+        // var depthsum = depthsums.get(d.depth+1) ? depthsums.get(d.depth+1) : depthsums.set(d.depth+1, d3.sum(d.children.map(function(n) { return n.count })));
+        var depthsum = d3.sum(d.children.map(function(n) { return n.count }));
         
         d.children.forEach(function(d, i) {
             d.x = x(d.depth * (hspace + tree.nodeSize()[0])) - tree.nodeSize()[0];
