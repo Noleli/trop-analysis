@@ -1,5 +1,4 @@
-// var width = window.innerWidth,
-//     height = window.innerHeight;
+var graphHeight = 250;
 
 
 
@@ -27,10 +26,14 @@ var x = d3.scale.linear()
     .domain([0, width])
     .range([width, 0]);
 
-var svg = d3.select("#vizcontainer").append("svg")
-    .attr("width", width)
-    .attr("height", height)
-    .attr("direction", "rtl");
+d3.select("#vizcontainer")
+    .style({"height": (window.innerHeight - graphHeight) + "px"});
+
+var svg = d3.select("#vizcontainer")
+    .append("svg")
+        .attr("width", width)
+        .attr("height", height)
+        .attr("direction", "rtl");
 
 var nodes = []
 var links;
@@ -102,41 +105,70 @@ function update() {
         return "translate(" + d.x + ", " + d.y + ")";
     }
 
-    var node = svg.selectAll("g.node").data(nodes, function(d) { return ancestry(d) }) // .filter(function(d) { return d.depth <= 1 }).sort(tree.sort)
-    node.enter().append("g")
-            .attr("class", "node");
-
-    node.on("click", nodeclick);
-
-    node.attr("transform", pos);
-    node.classed("disabled", function(d) { return d.disabled });
-
-    node.append("rect")
+    var node = svg.selectAll("g.node").data(nodes, function(d) { return ancestry(d) }); // .filter(function(d) { return d.depth <= 1 }).sort(tree.sort)
+    
+    var nodeenter = node.enter()
+        .append("g")
+            .attr("class", "node")
+            .on("click", nodeclick);
+        // console.log(n);
+    nodeenter.append("rect")
         .attr("width", tree.nodeSize()[0]).attr("height", tree.nodeSize()[1]);
 
-    node.append("text")
+    nodeenter.append("text")
         .attr("class", "tropchar")
         .attr("dx", 50)
         .attr("dy", tree.nodeSize()[1]/2+30)
         .text(function(d) { return " " + d.char; });
 
-    node.append("text")
+    nodeenter.append("text")
         .attr("class", "count")
         .attr("dx", 50)
         .attr("dy", tree.nodeSize()[1]/2+30)
         .text(function(d) { return d.count; });
 
-    node.append("text")
+    nodeenter.append("text")
         .attr("class", "prob")
         .attr("dx", 50)
         .attr("dy", tree.nodeSize()[1]/2-20)
         .text(function(d) { return probformat(d.prob); });
 
-    node.append("text")
+    nodeenter.append("text")
         .attr("class", "name")
         .attr("dx", 70)
         .attr("dy", tree.nodeSize()[1]/2+10)
         .text(function(d) { return d.name; });
+
+
+    node.attr("transform", pos);
+    node.classed("disabled", function(d) { return d.disabled });
+
+    // node.append("rect")
+    //     .attr("width", tree.nodeSize()[0]).attr("height", tree.nodeSize()[1]);
+
+    // node.append("text")
+    //     .attr("class", "tropchar")
+    //     .attr("dx", 50)
+    //     .attr("dy", tree.nodeSize()[1]/2+30)
+    //     .text(function(d) { return " " + d.char; });
+
+    // node.append("text")
+    //     .attr("class", "count")
+    //     .attr("dx", 50)
+    //     .attr("dy", tree.nodeSize()[1]/2+30)
+    //     .text(function(d) { return d.count; });
+
+    // node.append("text")
+    //     .attr("class", "prob")
+    //     .attr("dx", 50)
+    //     .attr("dy", tree.nodeSize()[1]/2-20)
+    //     .text(function(d) { return probformat(d.prob); });
+
+    // node.append("text")
+    //     .attr("class", "name")
+    //     .attr("dx", 70)
+    //     .attr("dy", tree.nodeSize()[1]/2+10)
+    //     .text(function(d) { return d.name; });
 
     node.exit().remove();
 
@@ -209,6 +241,9 @@ function nodeclick(d) {
             d.x = x(d.depth * (hspace + tree.nodeSize()[0])) - tree.nodeSize()[0];
             d.y = i*(vspace + tree.nodeSize()[1]);
 
+            d.disabled = false;
+            // d.clicked = true;
+
             d.prob = d.count/depthsum;
         });
         nodes = nodes.concat(d.children); //.sort(function(a,b) { return b.count - a.count }));
@@ -233,7 +268,11 @@ function nodeclick(d) {
 function collapse(d) {
     if (d.children) {
         d._children = d.children;
-        d._children.forEach(collapse);
+        d._children.forEach(function(n) {
+            // d.clicked = false;
+            // d.disabled = false;
+            collapse(n);
+        });
         d.children = null;
     }
 }
@@ -245,3 +284,11 @@ function expand(d) {
         d._children = null;
     }
 }
+
+
+
+
+
+
+
+
