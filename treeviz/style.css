@@ -49,3 +49,11 @@ svg {
 .link.disabled {
     stroke: #eee;
 }
+
+
+
+
+
+#graphcontainer {
+    margin: 2px;
+}

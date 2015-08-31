@@ -27,7 +27,7 @@ var x = d3.scale.linear()
     .range([width, 0]);
 
 d3.select("#vizcontainer")
-    .style({"height": (window.innerHeight - graphHeight) + "px"});
+    .style({"height": (window.innerHeight - graphHeight - 5) + "px"});
 
 var svg = d3.select("#vizcontainer")
     .append("svg")
@@ -289,6 +289,18 @@ function expand(d) {
 
 
 
+var graphWidth = window.innerWidth - 4;
 
+var graphsvg = d3.select("#graphcontainer")
+    .append("svg")
+        .attr("width", graphWidth)
+        .attr("height", graphHeight)
+        .attr("direction", "rtl");
 
+var graphx = d3.scale.linear()
+    .domain([0, graphWidth])
+    .range([]);
 
+d3.json("byperek_munakhrevii.json", function(byperekjson) {
+    console.log(byperekjson.length);
+});
