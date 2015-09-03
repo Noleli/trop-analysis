@@ -1,4 +1,4 @@
-var graphHeight = 250;
+var graphHeight = 200;
 
 
 
@@ -289,18 +289,49 @@ function expand(d) {
 
 
 
+var graphMargin = {left: 4, right: 4, top: 2, bottom: 2};
 var graphWidth = window.innerWidth - 4;
 
 var graphsvg = d3.select("#graphcontainer")
     .append("svg")
         .attr("width", graphWidth)
-        .attr("height", graphHeight)
-        .attr("direction", "rtl");
+        .attr("height", graphHeight);
+        // .attr("direction", "rtl");
 
-var graphx = d3.scale.linear()
-    .domain([0, graphWidth])
-    .range([]);
+// var graphx = d3.scale.linear()
+//     .domain([0, graphWidth])
+//     .range([]);
+
+var graphx = d3.scale.ordinal();
+var graphy = d3.scale.linear();
+    // .domain()
 
 d3.json("byperek_munakhrevii.json", function(byperekjson) {
-    console.log(byperekjson.length);
+    jsonobj = byperekjson;
+    graphx.domain(byperekjson.map(function(d) { return d.index }))
+        .rangeBands([graphWidth-graphMargin.right, graphMargin.left], .2);
+
+    graphy.domain(d3.extent(byperekjson.map(function(d) { return d.norm })))
+        .range([graphHeight+graphMargin.bottom, graphMargin.top]);
+
+    graphUpdate(byperekjson);
 });
+
+function graphUpdate(data) {
+    var bar = graphsvg.selectAll("rect.bar").data(data, function(d) { return d.index });
+
+    // var barwidth = Math.floor(data.length/(graphWidth-graphMargin.right-graphMargin.left)) - graphx
+    var barwidth = graphx.rangeBand();
+
+    var barenter = bar.enter()
+        .append("rect")
+            .attr("class", "bar");
+        // console.log(n);
+    bar
+        .attr("width", barwidth)
+        .attr("height", function(d) { return graphy(d.norm) })
+        .attr("x", function(d) { return graphx(d.index) })
+        .attr("y", function(d) { return graphHeight - graphy(d.norm) });
+
+    bar.exit().remove();
+}

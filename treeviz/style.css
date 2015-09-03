@@ -57,3 +57,8 @@ svg {
 #graphcontainer {
     margin: 2px;
 }
+
+#graphcontainer .bar {
+    fill: #555;
+    stroke: none;
+}
