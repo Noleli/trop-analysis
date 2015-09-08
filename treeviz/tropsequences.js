@@ -1,4 +1,4 @@
-var graphHeight = 200;
+var graphHeight = 175;
 
 
 
