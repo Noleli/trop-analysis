@@ -201,6 +201,7 @@ function ancestry(n, s) {
 }
 
 function nodeclick(d) {
+    graph(ancestry(d).split(",").reverse().join(""));
     nodes = nodes.filter(function(n) { return n.depth <= d.depth });
     if(d.children || d._children) {
         width = (d3.max(nodes.map(function(d) { return d.depth })) + 2) * (tree.nodeSize()[0] + hspace);
@@ -289,6 +290,12 @@ function expand(d) {
 
 
 
+
+
+//////////////// graph //////////////
+
+var perekindex = ["bereshit,1","bereshit,2","bereshit,3","bereshit,4","bereshit,5","bereshit,6","bereshit,7","bereshit,8","bereshit,9","bereshit,10","bereshit,11","bereshit,12","bereshit,13","bereshit,14","bereshit,15","bereshit,16","bereshit,17","bereshit,18","bereshit,19","bereshit,20","bereshit,21","bereshit,22","bereshit,23","bereshit,24","bereshit,25","bereshit,26","bereshit,27","bereshit,28","bereshit,29","bereshit,30","bereshit,31","bereshit,32","bereshit,33","bereshit,34","bereshit,35","bereshit,36","bereshit,37","bereshit,38","bereshit,39","bereshit,40","bereshit,41","bereshit,42","bereshit,43","bereshit,44","bereshit,45","bereshit,46","bereshit,47","bereshit,48","bereshit,49","bereshit,50","shmot,1","shmot,2","shmot,3","shmot,4","shmot,5","shmot,6","shmot,7","shmot,8","shmot,9","shmot,10","shmot,11","shmot,12","shmot,13","shmot,14","shmot,15","shmot,16","shmot,17","shmot,18","shmot,19","shmot,20","shmot,21","shmot,22","shmot,23","shmot,24","shmot,25","shmot,26","shmot,27","shmot,28","shmot,29","shmot,30","shmot,31","shmot,32","shmot,33","shmot,34","shmot,35","shmot,36","shmot,37","shmot,38","shmot,39","shmot,40","vayikra,1","vayikra,2","vayikra,3","vayikra,4","vayikra,5","vayikra,6","vayikra,7","vayikra,8","vayikra,9","vayikra,10","vayikra,11","vayikra,12","vayikra,13","vayikra,14","vayikra,15","vayikra,16","vayikra,17","vayikra,18","vayikra,19","vayikra,20","vayikra,21","vayikra,22","vayikra,23","vayikra,24","vayikra,25","vayikra,26","vayikra,27","bmidbar,1","bmidbar,2","bmidbar,3","bmidbar,4","bmidbar,5","bmidbar,6","bmidbar,7","bmidbar,8","bmidbar,9","bmidbar,10","bmidbar,11","bmidbar,12","bmidbar,13","bmidbar,14","bmidbar,15","bmidbar,16","bmidbar,17","bmidbar,18","bmidbar,19","bmidbar,20","bmidbar,21","bmidbar,22","bmidbar,23","bmidbar,24","bmidbar,25","bmidbar,26","bmidbar,27","bmidbar,28","bmidbar,29","bmidbar,30","bmidbar,31","bmidbar,32","bmidbar,33","bmidbar,34","bmidbar,35","bmidbar,36","dvarim,1","dvarim,2","dvarim,3","dvarim,4","dvarim,5","dvarim,6","dvarim,7","dvarim,8","dvarim,9","dvarim,10","dvarim,11","dvarim,12","dvarim,13","dvarim,14","dvarim,15","dvarim,16","dvarim,17","dvarim,18","dvarim,19","dvarim,20","dvarim,21","dvarim,22","dvarim,23","dvarim,24","dvarim,25","dvarim,26","dvarim,27","dvarim,28","dvarim,29","dvarim,30","dvarim,31","dvarim,32","dvarim,33","dvarim,34"];
+
 var graphMargin = {left: 4, right: 4, top: 2, bottom: 2};
 var graphWidth = window.innerWidth - 4;
 
@@ -302,26 +309,36 @@ var graphsvg = d3.select("#graphcontainer")
 //     .domain([0, graphWidth])
 //     .range([]);
 
-var graphx = d3.scale.ordinal();
+var graphx = d3.scale.ordinal()
+    .domain(perekindex)
+    .rangeBands([graphWidth-graphMargin.right, graphMargin.left], .2);
 var graphy = d3.scale.linear();
+var barwidth = graphx.rangeBand();
     // .domain()
+initgraph();
 
-d3.json("byperek_munakhrevii.json", function(byperekjson) {
-    jsonobj = byperekjson;
-    graphx.domain(byperekjson.map(function(d) { return d.index }))
-        .rangeBands([graphWidth-graphMargin.right, graphMargin.left], .2);
+function graph(seq) {
+    var filename = "byperek_" + seq + ".json";
+    d3.json("byperek/" + filename, function(byperekjson) {
+        jsonobj = byperekjson;
+        // graphx.domain(byperekjson.map(function(d) { return d.index }))
+        // graphx.domain(perekindex)
+        //     .rangeBands([graphWidth-graphMargin.right, graphMargin.left], .2);
 
-    graphy.domain(d3.extent(byperekjson.map(function(d) { return d.norm })))
-        .range([graphHeight+graphMargin.bottom, graphMargin.top]);
+        // console.log(d3.extent(byperekjson.map(function(d) { return d.norm })));
+        graphy.domain([0, d3.max(byperekjson.map(function(d) { return d.norm }))])
+        // graphy.domain([0, 0.04])
+            .range([graphHeight-graphMargin.bottom, graphMargin.top]);
 
-    graphUpdate(byperekjson);
-});
+        graphUpdate(byperekjson);
+    });
+}
 
 function graphUpdate(data) {
     var bar = graphsvg.selectAll("rect.bar").data(data, function(d) { return d.index });
 
     // var barwidth = Math.floor(data.length/(graphWidth-graphMargin.right-graphMargin.left)) - graphx
-    var barwidth = graphx.rangeBand();
+    
 
     var barenter = bar.enter()
         .append("rect")
@@ -329,9 +346,19 @@ function graphUpdate(data) {
         // console.log(n);
     bar
         .attr("width", barwidth)
-        .attr("height", function(d) { return graphy(d.norm) })
+        // .attr("height", function(d) { return graphy(d.norm) })
         .attr("x", function(d) { return graphx(d.index) })
-        .attr("y", function(d) { return graphHeight - graphy(d.norm) });
+        .attr("y", function(d) { return graphy(d.norm) });
 
-    bar.exit().remove();
+    bar.transition().duration(100)
+        .attr("height", function(d) { return (graphHeight-graphMargin.bottom) - graphy(d.norm) })
+
+    bar.exit()
+        .attr("height", function(d) { return   (graphHeight-graphMargin.bottom) - graphy(0) })
+        .attr("y", function(d) { return graphy(0) });
+}
+
+function initgraph() {
+    var initdata = perekindex.map(function(i) { return { index: i, norm: 0 }});
+    graphUpdate(initdata);
 }
