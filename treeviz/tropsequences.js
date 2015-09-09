@@ -342,20 +342,17 @@ function graphUpdate(data) {
 
     var barenter = bar.enter()
         .append("rect")
-            .attr("class", "bar");
-        // console.log(n);
-    bar
-        .attr("width", barwidth)
-        // .attr("height", function(d) { return graphy(d.norm) })
-        .attr("x", function(d) { return graphx(d.index) })
-        .attr("y", function(d) { return graphy(d.norm) });
+            .attr("class", "bar")
+            .attr("width", barwidth)
+            .attr("x", function(d) { return graphx(d.index) });
 
-    bar.transition().duration(100)
-        .attr("height", function(d) { return (graphHeight-graphMargin.bottom) - graphy(d.norm) })
+    bar.transition().duration(250)
+        .attr("y", function(d) { return graphy(d.norm) })
+        .attr("height", function(d) { return (graphHeight-graphMargin.bottom) - graphy(d.norm) });
 
     bar.exit()
-        .attr("height", function(d) { return   (graphHeight-graphMargin.bottom) - graphy(0) })
-        .attr("y", function(d) { return graphy(0) });
+        .transition().duration(250).attr("height", function(d) { return   (graphHeight-graphMargin.bottom) - graphy(0) })
+        .transition().duration(250).attr("y", function(d) { return graphy(0) });
 }
 
 function initgraph() {
