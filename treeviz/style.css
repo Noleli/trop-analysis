@@ -63,6 +63,9 @@ svg {
     fill: #555;
     stroke: none;
 }
+#graphcontainer .bar:hover {
+    fill: #999;
+}
 
 #graphcontainer .tick line {
     stroke: #000;
