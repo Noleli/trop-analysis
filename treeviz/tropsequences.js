@@ -129,7 +129,7 @@ function update() {
 
     nodeenter.append("text")
         .attr("class", "prob")
-        .attr("dx", 50)
+        .attr("dx", 60)
         .attr("dy", tree.nodeSize()[1]/2-20)
         .text(function(d) { return probformat(d.prob); });
 
@@ -201,9 +201,23 @@ function ancestry(n, s) {
 }
 
 function nodeclick(d) {
-    graph(ancestry(d).split(",").reverse().join(","));
-    nodes = nodes.filter(function(n) { return n.depth <= d.depth });
-    if(d.children || d._children) {
+    graph(ancestry(d).split(",").reverse().join(",")); // the ansestry string is backwards, so I have to do this silly thing.
+
+    // nodes.forEach(function(n) {
+    //     if(n.depth > d.depth) {
+    //         // n.clicked = false;
+    //         // n.disabled = false;
+    //         collapse(n);
+    //     }
+    // });
+    
+    nodes = nodes.filter(function(n) {
+        if(n.depth > d.depth) {
+            collapse(n);
+        }
+        return n.depth <= d.depth
+    });
+    if(d.children || d._children) { // this is the more general way of asking whether it's not a sof pasuk
         width = (d3.max(nodes.map(function(d) { return d.depth })) + 2) * (tree.nodeSize()[0] + hspace);
         x.domain([0, width]);
         x.range([width, 0]);
@@ -219,7 +233,7 @@ function nodeclick(d) {
                 n.clicked = false;
                 n.disabled = true;
                 collapse(n);
-                links = links.filter(function(l) { return l.source != n});
+                // links = links.filter(function(l) { return l.source != n});
                 // width 
             }
         });
@@ -243,7 +257,7 @@ function nodeclick(d) {
             d.y = i*(vspace + tree.nodeSize()[1]);
 
             d.disabled = false;
-            // d.clicked = true;
+            d.clicked = false;
 
             d.prob = d.count/depthsum;
         });
@@ -251,16 +265,29 @@ function nodeclick(d) {
         // links = links.concat(tree.links(d.children).filter(function(n) { n.source.name == d.name && n.source.depth == d.depth; }));
         // console.log(d.children);
         // links = links.concat(tree.links(nodes));
-        links = tree.links(nodes);
+        // links = tree.links(nodes);
     }
     else {
+        console.log("not here, right?");
         d.clicked = true;
         d.disabled = false;
 
-        width = (d3.max(nodes.map(function(d) { return d.depth })) + 2) * (tree.nodeSize()[0] + hspace);
-        x.domain([0, width]);
-        x.range([width, 0]);
-        svg.attr("width", width);
+        nodes.forEach(function(n) {
+            if(n.depth == d.depth && n != d) {
+                n.clicked = false;
+                n.disabled = true;
+                collapse(n);
+            }
+
+            if(n.depth > d.depth) {
+                collapse(n);
+            }
+        });
+
+        // width = (d3.max(nodes.map(function(d) { return d.depth })) + 2) * (tree.nodeSize()[0] + hspace);
+        // x.domain([0, width]);
+        // x.range([width, 0]);
+        // svg.attr("width", width);
     }
     links = tree.links(nodes);
     update();
