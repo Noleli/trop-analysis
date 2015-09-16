@@ -400,8 +400,8 @@ function graph(seq) {
             .attr("class", "bar")
             .attr("width", barwidth)
             .attr("x", function(d) { return graphx(d.index) })
-            .on("mouseover", dotooltip);
-            // .on("mouseout", function(d) { tooltipg.selectAll("g.tooltip").remove()});
+            .on("mouseover", dotooltip)
+            .on("mouseout", function(d) { tooltipg.selectAll("g.tooltip").remove()});
 
 
     bar
