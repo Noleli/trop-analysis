@@ -82,8 +82,6 @@ svg {
 
 #graphcontainer rect.tooltip {
     fill: rgba(40,40,40,0.75);
-    rx: 4;
-    ry: 4;
 }
 
 #graphcontainer .tooltip text {

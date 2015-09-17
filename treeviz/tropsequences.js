@@ -446,7 +446,9 @@ function dotooltip(d) {
         .attr("direction", "ltr");
         // .attr("transform", "translate(" + graphx(d.index) + ")")
 
-    var ttbgrect = tooltip.append("rect").attr("class", "tooltip");
+    var ttbgrect = tooltip.append("rect").attr("class", "tooltip")
+        .attr("rx", 4)
+        .attr("ry", 4);
 
     var locationtext = tooltip.append("text")
         .text(locationformat(d.index))
