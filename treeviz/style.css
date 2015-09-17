@@ -79,3 +79,18 @@ svg {
     fill: none;
     stroke: #000;
 }
+
+#graphcontainer rect.tooltip {
+    fill: rgba(40,40,40,0.75);
+    rx: 4;
+    ry: 4;
+}
+
+#graphcontainer .tooltip text {
+    fill: #fff;
+    font-size: 13px;
+}
+
+#graphcontainer .tooltip text.location {
+    font-weight: bold;
+}

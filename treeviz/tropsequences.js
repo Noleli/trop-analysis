@@ -290,6 +290,9 @@ function nodeclick(d) {
     }
     links = tree.links(nodes);
     update();
+    if(d.children.length == 1 || d._children.length == 1) {
+        nodeclick(d.children[0]);
+    }
 }
 
 function collapse(d) {
@@ -322,7 +325,7 @@ function expand(d) {
 
 var perekindex = ["bereshit,1","bereshit,2","bereshit,3","bereshit,4","bereshit,5","bereshit,6","bereshit,7","bereshit,8","bereshit,9","bereshit,10","bereshit,11","bereshit,12","bereshit,13","bereshit,14","bereshit,15","bereshit,16","bereshit,17","bereshit,18","bereshit,19","bereshit,20","bereshit,21","bereshit,22","bereshit,23","bereshit,24","bereshit,25","bereshit,26","bereshit,27","bereshit,28","bereshit,29","bereshit,30","bereshit,31","bereshit,32","bereshit,33","bereshit,34","bereshit,35","bereshit,36","bereshit,37","bereshit,38","bereshit,39","bereshit,40","bereshit,41","bereshit,42","bereshit,43","bereshit,44","bereshit,45","bereshit,46","bereshit,47","bereshit,48","bereshit,49","bereshit,50","shmot,1","shmot,2","shmot,3","shmot,4","shmot,5","shmot,6","shmot,7","shmot,8","shmot,9","shmot,10","shmot,11","shmot,12","shmot,13","shmot,14","shmot,15","shmot,16","shmot,17","shmot,18","shmot,19","shmot,20","shmot,21","shmot,22","shmot,23","shmot,24","shmot,25","shmot,26","shmot,27","shmot,28","shmot,29","shmot,30","shmot,31","shmot,32","shmot,33","shmot,34","shmot,35","shmot,36","shmot,37","shmot,38","shmot,39","shmot,40","vayikra,1","vayikra,2","vayikra,3","vayikra,4","vayikra,5","vayikra,6","vayikra,7","vayikra,8","vayikra,9","vayikra,10","vayikra,11","vayikra,12","vayikra,13","vayikra,14","vayikra,15","vayikra,16","vayikra,17","vayikra,18","vayikra,19","vayikra,20","vayikra,21","vayikra,22","vayikra,23","vayikra,24","vayikra,25","vayikra,26","vayikra,27","bmidbar,1","bmidbar,2","bmidbar,3","bmidbar,4","bmidbar,5","bmidbar,6","bmidbar,7","bmidbar,8","bmidbar,9","bmidbar,10","bmidbar,11","bmidbar,12","bmidbar,13","bmidbar,14","bmidbar,15","bmidbar,16","bmidbar,17","bmidbar,18","bmidbar,19","bmidbar,20","bmidbar,21","bmidbar,22","bmidbar,23","bmidbar,24","bmidbar,25","bmidbar,26","bmidbar,27","bmidbar,28","bmidbar,29","bmidbar,30","bmidbar,31","bmidbar,32","bmidbar,33","bmidbar,34","bmidbar,35","bmidbar,36","dvarim,1","dvarim,2","dvarim,3","dvarim,4","dvarim,5","dvarim,6","dvarim,7","dvarim,8","dvarim,9","dvarim,10","dvarim,11","dvarim,12","dvarim,13","dvarim,14","dvarim,15","dvarim,16","dvarim,17","dvarim,18","dvarim,19","dvarim,20","dvarim,21","dvarim,22","dvarim,23","dvarim,24","dvarim,25","dvarim,26","dvarim,27","dvarim,28","dvarim,29","dvarim,30","dvarim,31","dvarim,32","dvarim,33","dvarim,34"];
 
-var graphMargin = {left: 4, right: 50, top: 40, bottom: 18};
+var graphMargin = {left: 4, right: 50, top: 55, bottom: 18};
 var graphWidth = window.innerWidth - 20;
 
 var graphsvg = d3.select("#graphcontainer")
@@ -362,10 +365,13 @@ var xaxisg = graphsvg.append("g")
     .attr("height", graphMargin.bottom)
     .call(xAxis);
 
+
+var tooltipvmargin = 4;
+var tooltiphpadding = 4;
 var tooltipg = graphsvg.append("g")
     .attr("class", "tooltips")
     .attr("height", graphMargin.top)
-    .attr("transform", "translate(" + graphMargin.left + "," + 10 + ")");
+    .attr("transform", "translate(" + graphMargin.left + "," + tooltipvmargin + ")");
 
 var byperekdata;
 d3.json("byperek_full.json", function(byperekjson) {
@@ -391,21 +397,25 @@ d3.json("byperek_full.json", function(byperekjson) {
 
 function graph(seq) {
     var data = byperekdata.get(seq).sources;
-    var bar = barg.selectAll("rect.bar").data(data, function(d) { return d.index });
+    var bar = barg.selectAll("a rect.bar").data(data, function(d) { return d.index });
 
     graphy.domain([0, d3.max(data.map(function(d) { return d.norm }))]);        
 
     var barenter = bar.enter()
-        .append("rect")
-            .attr("class", "bar")
-            .attr("width", barwidth)
-            .attr("x", function(d) { return graphx(d.index) })
-            .on("mouseover", dotooltip)
-            .on("mouseout", function(d) { tooltipg.selectAll("g.tooltip").remove()});
+        .append("a")
+            .attr("xlink:href", function(d) { return "http://www.sefaria.org/" + linkformat(d.index) })
+            .append("rect")
+                .attr("class", "bar")
+                .attr("width", barwidth)
+                .attr("x", function(d) { return graphx(d.index) })
+                .attr("y", function(d) { return graphy(0) })
+                .attr("height", function(d) { return (graphHeight-graphMargin.bottom-graphMargin.top) - graphy(0) })
+                .on("mouseover", dotooltip)
+                .on("mouseout", function(d) { tooltipg.selectAll("g.tooltip").remove()});
 
 
-    bar
-        .attr("title", function(d) { return d.index })
+    // bar
+    //     .attr("title", function(d) { return d.index })
     bar.transition().duration(250)
         .attr("y", function(d) { return graphy(d.norm) })
         .attr("height", function(d) { return (graphHeight-graphMargin.bottom-graphMargin.top) - graphy(d.norm) });
@@ -420,13 +430,58 @@ function initgraph() {
     graphUpdate(initdata);
 }
 
+var normformat = d3.format(".2f");
 function dotooltip(d) {
     tooltipg.selectAll("g.tooltip").remove();
-    tooltipg.append("g")
+    var tooltip = tooltipg.append("g")
         .attr("class", "tooltip")
-        .attr("transform", "translate(" + graphx(d.index) + ")")
-        .append("text")
-            .text(d.index);
+        .attr("direction", "ltr");
+        // .attr("transform", "translate(" + graphx(d.index) + ")")
+
+    var ttbgrect = tooltip.append("rect").attr("class", "tooltip");
+
+    var locationtext = tooltip.append("text")
+        .text(locationformat(d.index))
+        .attr("transform", "translate(" + tooltiphpadding + "," + 13 + ")")
+        .attr("class", "location");
+    tooltip.attr("transform", "translate(" + (graphx(d.index)) + ")");
+    var occurrencestext = tooltip.append("text")
+        .text(d.count + (d.count == 1 ? " occurrence" : " occurrences"))
+            .attr("transform", "translate(" + tooltiphpadding + "," + 27 + ")");
+    var normtext = tooltip.append("text")
+        .text(normformat(d.norm) + " per pasuk")
+            .attr("transform", "translate(" + tooltiphpadding + "," + 41 + ")");
+
+    var ttwidth = occurrencestext[0][0].getComputedTextLength() > normtext[0][0].getComputedTextLength() ? occurrencestext[0][0].getComputedTextLength() : normtext[0][0].getComputedTextLength();
+    ttbgrect
+        .attr("width", ttwidth + 2*tooltiphpadding)
+        .attr("height", graphMargin.top - 2*tooltipvmargin);
+}
+
+var locationformat = function(t) {
+    var split = t.split(",");
+
+    var sefer;
+    if(split[0] == "bereshit") sefer = "Bereshit";
+    else if(split[0] == "shmot") sefer = "Shmot";
+    else if(split[0] == "vayikra") sefer = "Vayikra";
+    else if(split[0] == "bmidbar") sefer = "B’midbar";
+    else if(split[0] == "dvarim") sefer = "D’varim";
+
+    return sefer + " " + split[1];
+}
+
+var linkformat = function(t) {
+    var split = t.split(",");
+
+    var sefer;
+    if(split[0] == "bereshit") sefer = "Genesis";
+    else if(split[0] == "shmot") sefer = "Exodus";
+    else if(split[0] == "vayikra") sefer = "Leviticus";
+    else if(split[0] == "bmidbar") sefer = "Numbers";
+    else if(split[0] == "dvarim") sefer = "Deuteronomy";
+
+    return sefer + "." + split[1];
 }
 
 d3.select(window).on("resize", function() {
