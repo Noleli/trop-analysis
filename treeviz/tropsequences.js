@@ -290,8 +290,16 @@ function nodeclick(d) {
     }
     links = tree.links(nodes);
     update();
-    if(d.children.length == 1 || d._children.length == 1) {
-        nodeclick(d.children[0]);
+
+    if(d.children != null) {
+        if(d.children.length == 1) {
+
+        }
+    }
+    if(d._children != null) {
+        if(d._children.length == 1) {
+            nodeclick(d.children[0]);
+        }
     }
 }
 
@@ -408,8 +416,8 @@ function graph(seq) {
                 .attr("class", "bar")
                 .attr("width", barwidth)
                 .attr("x", function(d) { return graphx(d.index) })
-                .attr("y", function(d) { return graphy(0) })
-                .attr("height", function(d) { return (graphHeight-graphMargin.bottom-graphMargin.top) - graphy(0) })
+                .attr("y", function(d) { return graphy(d.norm) })
+                .attr("height", function(d) { return (graphHeight-graphMargin.bottom-graphMargin.top) - graphy(d.norm) })
                 .on("mouseover", dotooltip)
                 .on("mouseout", function(d) { tooltipg.selectAll("g.tooltip").remove()});
 
