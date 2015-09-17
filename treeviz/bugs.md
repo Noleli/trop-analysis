@@ -9,7 +9,7 @@ x if there's only 1 path forward, select it through the sof pasuk or till there'
 x graph axis labels
 - think about graph y scale
 x graph tooltips or something
-- links to prakim in sefaria
+x links to prakim in sefaria
 x transition to exit() is weird
 - initial graph loading state
 x window resizing
@@ -17,4 +17,4 @@ x window resizing
 - transitions for tree (reshuffle columns?)
 - stats/tracking
 - minify data and try to split it up for parallel loading
-- what's going on at merkha-tipkha-merkha-tipkha?
+x what's going on at merkha-tipkha-merkha-tipkha? gone. huh.
