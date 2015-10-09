@@ -17,4 +17,7 @@ x window resizing
 - transitions for tree (reshuffle columns?)
 - stats/tracking
 - minify data and try to split it up for parallel loading
-x what's going on at merkha-tipkha-merkha-tipkha? gone. huh.
+- what's going on at merkha-tipkha-merkha-tipkha? (gone sometimes…)
+- what's going on in telishaketana-tipkha?
+- clean up stress-only doublings (like pashta-pashta pashta-pashta)
+- add row-multiplied probabilities (global rather than conditional)
