@@ -58,9 +58,12 @@ var tropnames = d3.map([{"char": "\u0597", "name": "revii"}, {"char": "\u059d", 
 // var treePreD3 = [];
 
 var tropstrings;
+var disaggregated;
+
 d3.json("tropstrings.json", function(root) {
     // jsonobj = root;
     tropstrings = root;
+
     // console.log(root);
     // root.forEach(function(r) {
     //     // console.log(r);
@@ -230,7 +233,7 @@ function ancestry(n, s) {
 function nodeclick(d) {
     var ancestrynames = ancestry(d).split(",").reverse(); // the ancestry string is backwards, so I have to do this silly thing.
     // console.log(ancestrynames);
-    graph(ancestrynames.join(","));
+    // graph(ancestrynames.join(","));
 
     // nodes.forEach(function(n) {
     //     if(n.depth > d.depth) {
@@ -247,7 +250,7 @@ function nodeclick(d) {
         return n.depth <= d.depth;
     });
 
-    if(d.children == undefined && d._children == undefined) { // it's never been calculated. I think this will always be true because collapse() now deletes children.
+    if(d.children == undefined) { // it's never been calculated. I think this will always be true because collapse() now deletes children.
         var newchildren = [];
         var ancestorstring = ancestrynames.map(function(a) { return tropnames.get(a).char }).join("");
         // console.log(ancestrynames);
@@ -255,7 +258,25 @@ function nodeclick(d) {
             var child = {"name": tropnames.get(t).name, "char": tropnames.get(t).char};
             var exp = RegExp(ancestorstring + child.char, "g");
             // console.log(child);
-            child.count = d3.sum(tropstrings.filter(function(p) { return p.trop.search(exp) > -1 }).map(function(p) { return p.trop.match(exp).length }));
+            
+            // this line can do it in one line, but moving it out to a loop so we can also do sources for the graph at the same time
+            // child.count = d3.sum(tropstrings.filter(function(p) { return p.trop.search(exp) > -1 }).map(function(p) { return p.trop.match(exp).length }));
+            child.count = 0;
+            disaggregated = [];
+            disaggregated = tropstrings.map(function(p) {
+                var pasukobj = new Object();
+                pasukobj.sefer = p.sefer;
+                pasukobj.perek = p.perek;
+                pasukobj.pasuk = p.pasuk;
+                pasukobj.numtrop = p.trop.length;
+                
+                var thematch = p.trop.match(exp);
+                pasukobj.count = thematch ? thematch.length : 0;
+                child.count += pasukobj.count;
+
+                return pasukobj;
+            });
+
             child.depth = d.depth + 1;
             child.parent = d;
             // console.log(exp);
@@ -272,7 +293,7 @@ function nodeclick(d) {
     }
 
     if(d.children) { // this is the more general way of asking whether it's not a sof pasuk
-        width = (d3.max(nodes.map(function(d) { return d.depth })) + 2) * (tree.nodeSize()[0] + hspace);
+        width = (d3.max(nodes.map(function(d) { return d.depth })) + 1) * (tree.nodeSize()[0] + hspace);
         x.domain([0, width]);
         x.range([width, 0]);
         svg.attr("width", width);
@@ -355,6 +376,7 @@ function nodeclick(d) {
     //         nodeclick(d.children[0]);
     //     }
     // }
+    graph();
 }
 
 // function collapse(d) {
@@ -462,8 +484,9 @@ d3.json("byperek_full.json", function(byperekjson) {
     });
 }*/
 
-function graph(seq) {
-    var data = byperekdata.get(seq).sources;
+function graph() {
+    // var data = byperekdata.get(seq).sources;
+    var data = aggregate(disaggregated, "perek"); // aggregate by perek
     var bar = barg.selectAll("a rect.bar").data(data, function(d) { return d.index });
 
     graphy.domain([0, d3.max(data.map(function(d) { return d.norm }))]);        
@@ -495,6 +518,17 @@ function graph(seq) {
 function initgraph() {
     var initdata = perekindex.map(function(i) { return { index: i, norm: 0 }});
     graphUpdate(initdata);
+}
+
+function aggregate(data, by) {
+    var aggregated;
+    if(by == "perek") {
+        aggregated = d3.nest()
+            .key(function(d) { return d.sefer })
+            .key(function(d) { return d.perek })
+            .entries(disaggregated);
+    }
+    return aggregated;
 }
 
 var normformat = d3.format(".2f");
