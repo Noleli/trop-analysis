@@ -470,9 +470,9 @@ var tooltipg = graphsvg.append("g")
     .attr("transform", "translate(" + graphMargin.left + "," + tooltipvmargin + ")");
 
 var byperekdata;
-d3.json("byperek_full.json", function(byperekjson) {
-    byperekdata = d3.map(byperekjson, function(d) { return d.seq });
-});
+// d3.json("byperek_full.json", function(byperekjson) {
+//     byperekdata = d3.map(byperekjson, function(d) { return d.seq });
+// });
 
 /*function graph(seq) {
     var filename = "byperek_" + seq + ".json";
