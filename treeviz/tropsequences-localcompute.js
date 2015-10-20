@@ -296,10 +296,11 @@ function nodeclick(d) {
         disaggregated.push(pasukobj);
     });
 
-    width = (d.depth + 1) * (tree.nodeSize()[0] + hspace) + tree.nodeSize()[0];
+    // width = (d.depth + 1) * (tree.nodeSize()[0] + hspace) + tree.nodeSize()[0];
+    // width = (d3.max(nodes.map(function(d) { return d.depth })) + 2) * (tree.nodeSize()[0] + hspace);
 
     if(d.children) { // this is the more general way of asking whether it's not a sof pasuk
-        // width = (d3.max(nodes.map(function(d) { return d.depth })) + 1) * (tree.nodeSize()[0] + hspace);
+        width = (d3.max(nodes.map(function(d) { return d.depth })) + 2) * (tree.nodeSize()[0] + hspace);
         x.domain([0, width]);
         x.range([width, 0]);
         svg.attr("width", width);
