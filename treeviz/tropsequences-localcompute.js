@@ -250,9 +250,10 @@ function nodeclick(d) {
         return n.depth <= d.depth;
     });
 
+    var ancestorstring = ancestrynames.map(function(a) { return tropnames.get(a).char }).join("");
     if(d.children == undefined) { // it's never been calculated. I think this will always be true because collapse() now deletes children.
         var newchildren = [];
-        var ancestorstring = ancestrynames.map(function(a) { return tropnames.get(a).char }).join("");
+        
         // console.log(ancestrynames);
         tropnames.forEach(function(t) {
             var child = {"name": tropnames.get(t).name, "char": tropnames.get(t).char};
@@ -260,22 +261,9 @@ function nodeclick(d) {
             // console.log(child);
             
             // this line can do it in one line, but moving it out to a loop so we can also do sources for the graph at the same time
-            // child.count = d3.sum(tropstrings.filter(function(p) { return p.trop.search(exp) > -1 }).map(function(p) { return p.trop.match(exp).length }));
-            child.count = 0;
-            disaggregated = [];
-            disaggregated = tropstrings.map(function(p) {
-                var pasukobj = new Object();
-                pasukobj.sefer = p.sefer;
-                pasukobj.perek = p.perek;
-                pasukobj.pasuk = p.pasuk;
-                pasukobj.numtrop = p.trop.length;
-                
-                var thematch = p.trop.match(exp);
-                pasukobj.count = thematch ? thematch.length : 0;
-                child.count += pasukobj.count;
-
-                return pasukobj;
-            });
+            child.count = d3.sum(tropstrings.filter(function(p) { return p.trop.search(exp) > -1 }).map(function(p) { return p.trop.match(exp).length }));
+            // child.count = 0;
+            
 
             child.depth = d.depth + 1;
             child.parent = d;
@@ -292,8 +280,26 @@ function nodeclick(d) {
         // console.log(d);
     }
 
+    // do graph location data
+    disaggregated = [];
+    var exp = RegExp(ancestorstring, "g");
+    tropstrings.forEach(function(p) {
+        var pasukobj = new Object();
+        pasukobj.sefer = p.sefer;
+        pasukobj.perek = p.perek;
+        pasukobj.pasuk = p.pasuk;
+        pasukobj.numtrop = p.trop.length;
+        
+        var thematch = p.trop.match(exp);
+        pasukobj.count = thematch ? thematch.length : 0;
+
+        disaggregated.push(pasukobj);
+    });
+
+    width = (d.depth + 1) * (tree.nodeSize()[0] + hspace) + tree.nodeSize()[0];
+
     if(d.children) { // this is the more general way of asking whether it's not a sof pasuk
-        width = (d3.max(nodes.map(function(d) { return d.depth })) + 1) * (tree.nodeSize()[0] + hspace);
+        // width = (d3.max(nodes.map(function(d) { return d.depth })) + 1) * (tree.nodeSize()[0] + hspace);
         x.domain([0, width]);
         x.range([width, 0]);
         svg.attr("width", width);
@@ -487,19 +493,20 @@ d3.json("byperek_full.json", function(byperekjson) {
 function graph() {
     // var data = byperekdata.get(seq).sources;
     var data = aggregate(disaggregated, "perek"); // aggregate by perek
-    var bar = barg.selectAll("a rect.bar").data(data, function(d) { return d.index });
+    var bar = barg.selectAll("a rect.bar").data(data, function(d) { return d.key });
+    // console.log(data);
 
-    graphy.domain([0, d3.max(data.map(function(d) { return d.norm }))]);        
+    graphy.domain([0, d3.max(data.map(function(d) { return d.values.norm }))]);        
 
     var barenter = bar.enter()
         .append("a")
-            .attr("xlink:href", function(d) { return "http://www.sefaria.org/" + linkformat(d.index) })
+            .attr("xlink:href", function(d) { return "http://www.sefaria.org/" + linkformat(d.key) })
             .append("rect")
                 .attr("class", "bar")
                 .attr("width", barwidth)
-                .attr("x", function(d) { return graphx(d.index) })
-                .attr("y", function(d) { return graphy(d.norm) })
-                .attr("height", function(d) { return (graphHeight-graphMargin.bottom-graphMargin.top) - graphy(d.norm) })
+                .attr("x", function(d) { return graphx(d.key) })
+                .attr("y", function(d) { return graphy(d.values.norm) })
+                .attr("height", function(d) { return (graphHeight-graphMargin.bottom-graphMargin.top) - graphy(d.values.norm) })
                 .on("mouseover", dotooltip)
                 .on("mouseout", function(d) { tooltipg.selectAll("g.tooltip").remove()});
 
@@ -507,8 +514,8 @@ function graph() {
     // bar
     //     .attr("title", function(d) { return d.index })
     bar.transition().duration(250)
-        .attr("y", function(d) { return graphy(d.norm) })
-        .attr("height", function(d) { return (graphHeight-graphMargin.bottom-graphMargin.top) - graphy(d.norm) });
+        .attr("y", function(d) { return graphy(d.values.norm) })
+        .attr("height", function(d) { return (graphHeight-graphMargin.bottom-graphMargin.top) - graphy(d.values.norm) });
 
     bar.exit().transition().duration(250)
         .attr("height", 1)
@@ -524,11 +531,21 @@ function aggregate(data, by) {
     var aggregated;
     if(by == "perek") {
         aggregated = d3.nest()
-            .key(function(d) { return d.sefer })
-            .key(function(d) { return d.perek })
-            .entries(disaggregated);
+            .key(function(d) { return d.sefer+","+d.perek })
+            // .key(function(d) { return d.perek })
+            .rollup(function(l) {
+                // console.log(l);
+                var countsum = d3.sum(l, function(d) { return d.count });
+                // var normdenominator = d3.sum(l, function(d) { return d.numtrop });
+                var normdenominator = l.length;
+                return {"count": countsum, "norm": countsum/normdenominator}
+            })
+            .entries(disaggregated)
     }
+
     return aggregated;
+
+
 }
 
 var normformat = d3.format(".2f");
@@ -544,15 +561,15 @@ function dotooltip(d) {
         .attr("ry", 4);
 
     var locationtext = tooltip.append("text")
-        .text(locationformat(d.index))
+        .text(locationformat(d.key))
         .attr("transform", "translate(" + tooltiphpadding + "," + 13 + ")")
         .attr("class", "location");
-    tooltip.attr("transform", "translate(" + (graphx(d.index)) + ")");
+    tooltip.attr("transform", "translate(" + (graphx(d.key)) + ")");
     var occurrencestext = tooltip.append("text")
-        .text(d.count + (d.count == 1 ? " occurrence" : " occurrences"))
+        .text(d.values.count + (d.values.count == 1 ? " occurrence" : " occurrences"))
             .attr("transform", "translate(" + tooltiphpadding + "," + 27 + ")");
     var normtext = tooltip.append("text")
-        .text(normformat(d.norm) + " per pasuk")
+        .text(normformat(d.values.norm) + " per pasuk")
             .attr("transform", "translate(" + tooltiphpadding + "," + 41 + ")");
 
     var ttwidth = occurrencestext[0][0].getComputedTextLength() > normtext[0][0].getComputedTextLength() ? occurrencestext[0][0].getComputedTextLength() : normtext[0][0].getComputedTextLength();
