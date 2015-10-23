@@ -16,8 +16,12 @@ x window resizing
 - scrollbars in firefox
 - transitions for tree (reshuffle columns?)
 - stats/tracking
-- minify data and try to split it up for parallel loading
+x minify data and try to split it up for parallel loading
 - what's going on at merkha-tipkha-merkha-tipkha? (gone sometimes…)
 - what's going on in telishaketana-tipkha?
 - clean up stress-only doublings (like pashta-pashta pashta-pashta)
 - add row-multiplied probabilities (global rather than conditional)
+- width adjusting can be weird. and needs to take into account the horizontal scrollbar for some reason
+- clicking on a graph bar should show individual p'sukim within that perek
+    - if there are fewer than N psukim total, show all of them regardless of which is clicked
+- 10 commandments

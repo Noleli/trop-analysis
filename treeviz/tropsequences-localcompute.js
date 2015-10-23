@@ -3,7 +3,7 @@ var graphHeight = 175;
 
 
 var hspace = 60,
-    vspace = 10;
+    vspace = 0;
 
 // function troptree() {
 //     return d3.layout.tree.call(this);
@@ -16,7 +16,7 @@ var hspace = 60,
 // troptree.prototype.constructor = troptree;
 
 var tree = d3.layout.tree()
-    .nodeSize([100,100]);
+    .nodeSize([210,30]);
 // tree.nodeSize = function() {return [100, 100]; // setting this manually since I'm not using tree() anymore
 
 height = 27 * (tree.nodeSize()[1] + vspace);
@@ -52,9 +52,10 @@ var jsonobj; // temp
     // .projection(function(d) { return [d.y, d.x]; });
 
 var probformat = d3.format(".1%");
+var countformat = d3.format(",");
 
 // d3.json("sequencetree-d3format.json", function(root) {
-var tropnames = d3.map([{"char": "\u0597", "name": "revii"}, {"char": "\u059d", "name": "gereshmukdam"}, {"char": "\u05a6", "name": "merkhakfula"}, {"char": "\u059e", "name": "gershayim"}, {"char": "\u059b", "name": "tevir"}, {"char": "\u059f", "name": "karnepara"}, {"char": "\u0595", "name": "gadol"}, {"char": "\u05a0", "name": "telishagedola"}, {"char": "\u0599", "name": "pashta"}, {"char": "\u0593", "name": "shalshelet"}, {"char": "\u0596", "name": "tipkha"}, {"char": "\u059a", "name": "yetiv"}, {"char": "\u0592", "name": "segol"}, {"char": "\u05aa", "name": "yerakhbenyomo"}, {"char": "\u05ae", "name": "zarka"}, {"char": "\u05a3", "name": "munakh"}, {"char": "\u05a5", "name": "merkha"}, {"char": "\u05a8", "name": "kadma"}, {"char": "\u0591", "name": "etnakhta"}, {"char": "\u05c3", "name": "sofpasuk"}, {"char": "\u0598", "name": "tsinnorit"}, {"char": "\u059c", "name": "geresh"}, {"char": "\u05a9", "name": "telishaketana"}, {"char": "\u05a7", "name": "darga"}, {"char": "\u05a1", "name": "pazer"}, {"char": "\u05a4", "name": "mapakh"}, {"char": "\u0594", "name": "katan"}], function(t) { return t.name });
+var tropnames = d3.map([{"char": "\u0597", "name": "revii", "heb": "רְבִ֗יע"}, {"char": "\u059d", "name": "gereshmukdam"}, {"char": "\u05a6", "name": "merkhakfula"}, {"char": "\u059e", "name": "gershayim"}, {"char": "\u059b", "name": "tevir", "heb": "תְּבִ֛יר"}, {"char": "\u059f", "name": "karnepara"}, {"char": "\u0595", "name": "gadol"}, {"char": "\u05a0", "name": "telishagedola"}, {"char": "\u0599", "name": "pashta", "heb": "פַּשְׁטָא֙"}, {"char": "\u0593", "name": "shalshelet"}, {"char": "\u0596", "name": "tipkha", "heb": "טִפְחָ֖א"}, {"char": "\u059a", "name": "yetiv"}, {"char": "\u0592", "name": "segol"}, {"char": "\u05aa", "name": "yerakhbenyomo"}, {"char": "\u05ae", "name": "zarka"}, {"char": "\u05a3", "name": "munakh", "heb": "מֻנַּ֣ח"}, {"char": "\u05a5", "name": "merkha", "heb": "מֵרְכָ֥א"}, {"char": "\u05a8", "name": "kadma"}, {"char": "\u0591", "name": "etnakhta", "heb": "אֶתְנַחְתָּ֑א"}, {"char": "\u05c3", "name": "sofpasuk", "heb": "סוֹף פָּסוּק׃"}, {"char": "\u0598", "name": "tsinnorit"}, {"char": "\u059c", "name": "geresh"}, {"char": "\u05a9", "name": "telishaketana"}, {"char": "\u05a7", "name": "darga"}, {"char": "\u05a1", "name": "pazer"}, {"char": "\u05a4", "name": "mapakh", "heb": "מַהְפַּ֤ך"}, {"char": "\u0594", "name": "katan", "heb": "קָטָ֔ן"}], function(t) { return t.name });
 // var treePreD3 = [];
 
 var tropstrings;
@@ -73,7 +74,7 @@ d3.json("tropstrings.json", function(root) {
 
     // go through and read in the root of each tree
     tropnames.forEach(function(t) {
-        var node = {"name": tropnames.get(t).name, "char": tropnames.get(t).char};
+        var node = {"name": tropnames.get(t).name, "char": tropnames.get(t).char, "heb": tropnames.get(t).heb};
         // console.log(node);
         var exp = RegExp(node.char, "g");
         node.count = d3.sum(tropstrings.filter(function(d) { return d.trop.search(exp) > -1 }).map(function(d) { return d.trop.match(exp).length }));
@@ -138,7 +139,13 @@ function update() {
             .on("click", nodeclick);
         // console.log(n);
     nodeenter.append("rect")
+        .attr("class", "outerbox")
         .attr("width", tree.nodeSize()[0]).attr("height", tree.nodeSize()[1]);
+
+    nodeenter.append("rect")
+        .attr("class", "histbar")
+        .attr("y", 0)
+        .attr("height", tree.nodeSize()[1]);
 
     nodeenter.append("text")
         .attr("class", "tropchar")
@@ -149,23 +156,27 @@ function update() {
 
     nodeenter.append("text")
         .attr("class", "name")
-        .attr("dx", 70)
-        .attr("dy", tree.nodeSize()[1]/2+10)
-        .text(function(d) { return d.name; });
+        .attr("dy", tree.nodeSize()[1]/2 + 6)
+        .text(function(d) { return d.heb ? d.heb : d.name; })
+        .attr("dx", tree.nodeSize()[0] - 5);
 
     nodeenter.append("text")
         .attr("class", "count")
-        .attr("dx", 50)
-        .attr("dy", tree.nodeSize()[1]/2+30);
+        .attr("dx", 4)
+        .attr("dy", 26);
 
     nodeenter.append("text")
         .attr("class", "prob")
-        .attr("dx", 60)
-        .attr("dy", tree.nodeSize()[1]/2-20);
+        .attr("dx", 4)
+        .attr("dy", 12);
 
+
+    node.select("rect.histbar")
+        .attr("x", function(d) { return tree.nodeSize()[0] - tree.nodeSize()[0] * d.prob - 1})
+        .attr("width", function(d) { return tree.nodeSize()[0] * d.prob });
 
     node.select("text.count")
-        .text(function(d) { return d.count; });
+        .text(function(d) { return countformat(d.count); });
 
     node.select("text.prob")
         .text(function(d) { return probformat(d.prob); });
@@ -256,7 +267,7 @@ function nodeclick(d) {
         
         // console.log(ancestrynames);
         tropnames.forEach(function(t) {
-            var child = {"name": tropnames.get(t).name, "char": tropnames.get(t).char};
+            var child = {"name": tropnames.get(t).name, "char": tropnames.get(t).char, "heb": tropnames.get(t).heb};
             var exp = RegExp(ancestorstring + child.char, "g");
             // console.log(child);
             
