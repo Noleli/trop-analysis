@@ -55,7 +55,7 @@ var probformat = d3.format(".1%");
 var countformat = d3.format(",");
 
 // d3.json("sequencetree-d3format.json", function(root) {
-var tropnames = d3.map([{"char": "\u0597", "name": "revii", "heb": "רְבִ֗יע"}, {"char": "\u059d", "name": "gereshmukdam"}, {"char": "\u05a6", "name": "merkhakfula"}, {"char": "\u059e", "name": "gershayim"}, {"char": "\u059b", "name": "tevir", "heb": "תְּבִ֛יר"}, {"char": "\u059f", "name": "karnepara"}, {"char": "\u0595", "name": "gadol"}, {"char": "\u05a0", "name": "telishagedola"}, {"char": "\u0599", "name": "pashta", "heb": "פַּשְׁטָא֙"}, {"char": "\u0593", "name": "shalshelet"}, {"char": "\u0596", "name": "tipkha", "heb": "טִפְחָ֖א"}, {"char": "\u059a", "name": "yetiv"}, {"char": "\u0592", "name": "segol"}, {"char": "\u05aa", "name": "yerakhbenyomo"}, {"char": "\u05ae", "name": "zarka"}, {"char": "\u05a3", "name": "munakh", "heb": "מֻנַּ֣ח"}, {"char": "\u05a5", "name": "merkha", "heb": "מֵרְכָ֥א"}, {"char": "\u05a8", "name": "kadma"}, {"char": "\u0591", "name": "etnakhta", "heb": "אֶתְנַחְתָּ֑א"}, {"char": "\u05c3", "name": "sofpasuk", "heb": "סוֹף פָּסוּק׃"}, {"char": "\u0598", "name": "tsinnorit"}, {"char": "\u059c", "name": "geresh"}, {"char": "\u05a9", "name": "telishaketana"}, {"char": "\u05a7", "name": "darga"}, {"char": "\u05a1", "name": "pazer"}, {"char": "\u05a4", "name": "mapakh", "heb": "מַהְפַּ֤ך"}, {"char": "\u0594", "name": "katan", "heb": "קָטָ֔ן"}], function(t) { return t.name });
+var tropnames = d3.map([{"char": "\u0597", "name": "revii", "heb": "רְבִ֗יע"}, {"char": "\u059d", "name": "gereshmukdam"}, {"char": "\u05a6", "name": "merkhakfula"}, {"char": "\u059e", "name": "gershayim", "heb": "גֵּרְשַׁ֞יִם"}, {"char": "\u059b", "name": "tevir", "heb": "תְּבִ֛יר"}, {"char": "\u059f", "name": "karnepara"}, {"char": "\u0595", "name": "gadol", "heb": "גָּד֕וֹל"}, {"char": "\u05a0", "name": "telishagedola"}, {"char": "\u0599", "name": "pashta", "heb": "פַּשְׁטָא֙"}, {"char": "\u0593", "name": "shalshelet"}, {"char": "\u0596", "name": "tipkha", "heb": "טִפְחָ֖א"}, {"char": "\u059a", "name": "yetiv"}, {"char": "\u0592", "name": "segol", "heb": "סְגוֹל֒"}, {"char": "\u05aa", "name": "yerakhbenyomo", "heb": "יֵרֶח בֶּן יוֹמ֪וֹ"}, {"char": "\u05ae", "name": "zarka"}, {"char": "\u05a3", "name": "munakh", "heb": "מֻנַּ֣ח"}, {"char": "\u05a5", "name": "merkha", "heb": "מֵרְכָ֥א"}, {"char": "\u05a8", "name": "kadma", "heb": "קַדְמָ֨א"}, {"char": "\u0591", "name": "etnakhta", "heb": "אֶתְנַחְתָּ֑א"}, {"char": "\u05c3", "name": "sofpasuk", "heb": "סוֹף פָּסוּק׃"}, {"char": "\u0598", "name": "tsinnorit"}, {"char": "\u059c", "name": "geresh", "heb": "גֵּ֜רֵשׁ"}, {"char": "\u05a9", "name": "telishaketana"}, {"char": "\u05a7", "name": "darga", "heb": "דַּרְגָּ֧א"}, {"char": "\u05a1", "name": "pazer"}, {"char": "\u05a4", "name": "mapakh", "heb": "מַהְפַּ֤ך"}, {"char": "\u0594", "name": "katan", "heb": "קָטָ֔ן"}], function(t) { return t.name });
 // var treePreD3 = [];
 
 var tropstrings;
@@ -140,7 +140,10 @@ function update() {
         // console.log(n);
     nodeenter.append("rect")
         .attr("class", "outerbox")
-        .attr("width", tree.nodeSize()[0]).attr("height", tree.nodeSize()[1]);
+        .attr("width", tree.nodeSize()[0])
+        .attr("height", tree.nodeSize()[1]);
+        
+        
 
     nodeenter.append("rect")
         .attr("class", "histbar")
@@ -172,7 +175,7 @@ function update() {
 
 
     node.select("rect.histbar")
-        .attr("x", function(d) { return tree.nodeSize()[0] - tree.nodeSize()[0] * d.prob - 1})
+        .attr("x", function(d) { return tree.nodeSize()[0] - tree.nodeSize()[0] * d.prob })
         .attr("width", function(d) { return tree.nodeSize()[0] * d.prob });
 
     node.select("text.count")
@@ -181,7 +184,28 @@ function update() {
     node.select("text.prob")
         .text(function(d) { return probformat(d.prob); });
 
-    node.attr("transform", pos);
+    // node.select("rect.outerbox")
+    //     .attr("width", function(d) { return tree.nodeSize()[0] * (d.depth ? d.parent.prob : 1 ) } )
+    //     .transition().duration(2000)
+    //     .attr("width", tree.nodeSize()[0]);
+
+    node
+        // .attr("transform", function(d) {
+        //     var translate;
+        //     var scale = "scale(" + 0.2 + ")";
+        //     if(d.depth) {
+        //         translate = "translate(";
+        //         translate += (d.parent.x - tree.nodeSize()[0] - tree.nodeSize()[0] * d.prob) + ",";
+        //         translate += d.parent.y + ")";
+        //     }
+        //     else {
+        //         translate = pos(d);
+        //     }
+        //     return translate + "," + scale;
+        // })
+        // .transition().duration(2000)
+        .attr("transform", pos);
+
     node.classed("disabled", function(d) { return d.disabled });
 
     // node.append("rect")

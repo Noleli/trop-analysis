@@ -20,11 +20,14 @@ svg {
 }
 
 .node.disabled rect.outerbox {
-    stroke: #999;
+    /*stroke: #999;*/
 }
 
 .node rect.histbar {
     fill: #a5a5a5;
+}
+.node.disabled rect.histbar {
+    fill: #ccc;
 }
 
 .node text {
@@ -32,7 +35,7 @@ svg {
     fill: #000;
 }
 .node.disabled text {
-    fill: #999;
+    fill: #777;
 }
 
 .node text.tropchar {
