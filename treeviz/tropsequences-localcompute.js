@@ -119,23 +119,37 @@ d3.json("tropstrings.json", function(root) {
     update();
 });
 
-function update() {
-    var pos = function(d, i) {
-        // var xPos = x(d.depth * (hspace + tree.nodeSize()[0])) - tree.nodeSize()[0];
-        // var yPos = i*(vspace + tree.nodeSize()[1]) - d.depth*(vspace + tree.nodeSize()[1]);
+var pos = function(d, i) {
+    // var xPos = x(d.depth * (hspace + tree.nodeSize()[0])) - tree.nodeSize()[0];
+    // var yPos = i*(vspace + tree.nodeSize()[1]) - d.depth*(vspace + tree.nodeSize()[1]);
 
-        // update these so we can use them when drawing links
-        // d.x = xPos;
-        // d.y = yPos;
-        // return "translate(" + xPos + ", " + yPos + ")";
-        return "translate(" + d.x + ", " + d.y + ")";
+    // update these so we can use them when drawing links
+    // d.x = xPos;
+    // d.y = yPos;
+    // return "translate(" + xPos + ", " + yPos + ")";
+    return "translate(" + d.x + ", " + d.y + ")";
+}
+
+var oldypos = function(d) {
+    console.log(this.attributes);
+    if(this.attributes.getNamedItem("transform")) {
+        console.log("hey");
+        var t = this.attributes.getNamedItem("transform").nodeValue;
+        var oldy = t.substring(t.indexOf(",") + 1, t.indexOf(")"));
     }
+    else oldy = d.y;
+    
+    return "translate(" + d.x + ", " + oldy + ")";
+}
+
+function update() {
 
     var node = svg.selectAll("g.node").data(nodes, function(d) { return d.name + "," + d.depth }); // .filter(function(d) { return d.depth <= 1 }).sort(tree.sort)
     
     var nodeenter = node.enter()
         .append("g")
             .attr("class", "node")
+            // .attr("transform", pos)
             .on("click", nodeclick);
         // console.log(n);
     nodeenter.append("rect")
@@ -203,7 +217,8 @@ function update() {
         //     }
         //     return translate + "," + scale;
         // })
-        // .transition().duration(2000)
+        .attr("transform", oldypos)
+        .transition().duration(500)
         .attr("transform", pos);
 
     node.classed("disabled", function(d) { return d.disabled });
@@ -238,12 +253,12 @@ function update() {
     node.exit().remove();
 
     var link = svg.selectAll("path.link")
-        .data(links); //, function(d) { return [d.name, d.depth] })
+        .data(links, function(d) { return d.target.name + "," + d.target.depth })
     
     link.enter().append("path")
             .attr("class", "link");
             // .attr("transform", "translate(0," + (tree.nodeSize()[1]/2) + ")");
-    link.attr("d", linkline);
+    link.transition().duration(500).attr("d", linkline);
     link.classed("disabled", linkclass);
     link.exit().remove();
 }
