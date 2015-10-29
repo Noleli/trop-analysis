@@ -7,14 +7,14 @@ x clicking back to something that had already been selected shows the previously
 - active link line should be on top (z)
 x if there's only 1 path forward, select it through the sof pasuk or till there's not
 x graph axis labels
-- think about graph y scale
+- toggle between normalized and counts
 x graph tooltips or something
 x links to prakim in sefaria
 x transition to exit() is weird
 - initial graph loading state
 x window resizing
 - scrollbars in firefox
-- transitions for tree (reshuffle columns?)
+x transitions for tree (reshuffle columns?)
 - stats/tracking
 x minify data and try to split it up for parallel loading
 - what's going on at merkha-tipkha-merkha-tipkha? (gone sometimes…)
@@ -25,3 +25,6 @@ x minify data and try to split it up for parallel loading
 - clicking on a graph bar should show individual p'sukim within that perek
     - if there are fewer than N psukim total, show all of them regardless of which is clicked
 - 10 commandments
+- click affordance, something on hover
+- hebrew axis labels
+- y axis label

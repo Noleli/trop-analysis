@@ -14,7 +14,7 @@ svg {
 }
 
 .node rect.outerbox {
-    fill: transparent;
+    fill: #fff;
     stroke: #727272;
     stroke-width: 1px;
 }

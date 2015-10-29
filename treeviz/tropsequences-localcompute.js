@@ -131,14 +131,14 @@ var pos = function(d, i) {
 }
 
 var oldypos = function(d) {
-    console.log(this.attributes);
+    // console.log(this.attributes);
     if(this.attributes.getNamedItem("transform")) {
-        console.log("hey");
+        // console.log("hey");
         var t = this.attributes.getNamedItem("transform").nodeValue;
         var oldy = t.substring(t.indexOf(",") + 1, t.indexOf(")"));
     }
     else oldy = d.y;
-    
+    // console.log(d.prevy);
     return "translate(" + d.x + ", " + oldy + ")";
 }
 
@@ -218,7 +218,7 @@ function update() {
         //     return translate + "," + scale;
         // })
         .attr("transform", oldypos)
-        .transition().duration(500)
+        .transition().duration(250)
         .attr("transform", pos);
 
     node.classed("disabled", function(d) { return d.disabled });
@@ -257,8 +257,10 @@ function update() {
     
     link.enter().append("path")
             .attr("class", "link");
-            // .attr("transform", "translate(0," + (tree.nodeSize()[1]/2) + ")");
-    link.transition().duration(500).attr("d", linkline);
+            // .attr("transform", "translate(" + (tree.nodeSize()[1] + hspace) + ")"); // attempt to shift it, then shift it back
+    link //.transition().duration(500)
+        .attr("d", linkline);
+        // .attr("transform", "translate(" + 0 + ")");
     link.classed("disabled", linkclass);
     link.exit().remove();
 }
@@ -358,6 +360,8 @@ function nodeclick(d) {
         nodes.forEach(function(n) {
             // n.x += tree.nodeSize()[0] + hspace;
             n.x = x(n.depth * (hspace + tree.nodeSize()[0])) - tree.nodeSize()[0];
+            n.prevy = n.y;
+
             
             if(!n.clicked) n.disabled = true;
 
@@ -386,6 +390,7 @@ function nodeclick(d) {
         
         d.children.forEach(function(d, i) {
             d.x = x(d.depth * (hspace + tree.nodeSize()[0])) - tree.nodeSize()[0];
+            // d.prevy = d.y;
             d.y = i*(vspace + tree.nodeSize()[1]);
 
             d.disabled = false;
@@ -589,7 +594,7 @@ function aggregate(data, by) {
                 var countsum = d3.sum(l, function(d) { return d.count });
                 // var normdenominator = d3.sum(l, function(d) { return d.numtrop });
                 var normdenominator = l.length;
-                return {"count": countsum, "norm": countsum/normdenominator}
+                return {"sefer": l[0].sefer, "perek": l[0].perek, "count": countsum, "norm": countsum/normdenominator}
             })
             .entries(disaggregated)
     }
@@ -627,6 +632,8 @@ function dotooltip(d) {
     ttbgrect
         .attr("width", ttwidth + 2*tooltiphpadding)
         .attr("height", graphMargin.top - 2*tooltipvmargin);
+
+    console.log(disaggregated.filter(function(p) { return p.sefer == d.values.sefer && p.perek == d.values.perek && p.count > 0 }));
 }
 
 var locationformat = function(t) {
