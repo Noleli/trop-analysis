@@ -26,5 +26,5 @@ x minify data and try to split it up for parallel loading
     - if there are fewer than N psukim total, show all of them regardless of which is clicked
 - 10 commandments
 - click affordance, something on hover
-- hebrew axis labels
+x hebrew axis labels
 - y axis label

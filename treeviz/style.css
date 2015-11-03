@@ -1,3 +1,7 @@
+body {
+    margin-top: 0;
+}
+
 #vizcontainer {
     overflow-y: scroll;
     padding: 2px;
@@ -5,6 +9,7 @@
 
 svg {
     overflow: visible;
+    margin-top: 8px;
     /*unicode-bidi: embed;*/
     font-family: sans-serif;
 }
@@ -33,6 +38,10 @@ svg {
 .node text {
     stroke: none;
     fill: #000;
+}
+.node:hover text, .node.disabled:hover text {
+    stroke: none;
+    fill: #1D3C8D;
 }
 .node.disabled text {
     fill: #777;
@@ -79,6 +88,7 @@ svg {
 }
 #graphcontainer .bar:hover {
     fill: #999;
+    cursor: pointer;
 }
 
 #graphcontainer .tick line {
@@ -105,4 +115,22 @@ svg {
 
 #graphcontainer .tooltip text.location {
     font-weight: bold;
+}
+
+
+#detailcontainer {
+    text-align: center;
+    position: absolute;
+    top: 10%;
+    width: 98%;
+    height: 60%;
+}
+#details {
+    background-color: rgba(255,255,255,.75);
+    border: 1px solid black;
+    border-radius: 30px;
+
+    width: 60%;
+    height: 100%;
+    margin: auto;
 }

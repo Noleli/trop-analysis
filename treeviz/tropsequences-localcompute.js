@@ -503,11 +503,11 @@ var xAxis = d3.svg.axis()
     .outerTickSize(0)
     .tickValues(["bereshit,1", "shmot,1", "vayikra,1", "bmidbar,1", "dvarim,1"])
     .tickFormat(function(t) {
-        if(t == "bereshit,1") return "Bereshit";
-        else if(t == "shmot,1") return "Shmot";
-        else if(t == "vayikra,1") return "Vayikra";
-        else if(t == "bmidbar,1") return "B’midbar";
-        else if(t == "dvarim,1") return "D’varim";
+        if(t == "bereshit,1") return "בראשית";
+        else if(t == "shmot,1") return "שמות";
+        else if(t == "vayikra,1") return "ויקרא";
+        else if(t == "bmidbar,1") return "במדבר";
+        else if(t == "dvarim,1") return "דברים";
         else return t;
     });
 
@@ -549,14 +549,14 @@ var byperekdata;
 function graph() {
     // var data = byperekdata.get(seq).sources;
     var data = aggregate(disaggregated, "perek"); // aggregate by perek
-    var bar = barg.selectAll("a rect.bar").data(data, function(d) { return d.key });
+    var bar = barg.selectAll("rect.bar").data(data, function(d) { return d.key });
     // console.log(data);
 
     graphy.domain([0, d3.max(data.map(function(d) { return d.values.norm }))]);        
 
     var barenter = bar.enter()
-        .append("a")
-            .attr("xlink:href", function(d) { return "http://www.sefaria.org/" + linkformat(d.key) })
+        // .append("a")
+        //     .attr("xlink:href", function(d) { return "http://www.sefaria.org/" + linkformat(d.key) })
             .append("rect")
                 .attr("class", "bar")
                 .attr("width", barwidth)
@@ -564,7 +564,8 @@ function graph() {
                 .attr("y", function(d) { return graphy(d.values.norm) })
                 .attr("height", function(d) { return (graphHeight-graphMargin.bottom-graphMargin.top) - graphy(d.values.norm) })
                 .on("mouseover", dotooltip)
-                .on("mouseout", function(d) { tooltipg.selectAll("g.tooltip").remove()});
+                .on("mouseout", function(d) { tooltipg.selectAll("g.tooltip").remove()})
+                .on("click", graphclick);
 
 
     // bar
@@ -632,7 +633,9 @@ function dotooltip(d) {
     ttbgrect
         .attr("width", ttwidth + 2*tooltiphpadding)
         .attr("height", graphMargin.top - 2*tooltipvmargin);
+}
 
+function graphclick(d) {
     console.log(disaggregated.filter(function(p) { return p.sefer == d.values.sefer && p.perek == d.values.perek && p.count > 0 }));
 }
 
@@ -640,11 +643,11 @@ var locationformat = function(t) {
     var split = t.split(",");
 
     var sefer;
-    if(split[0] == "bereshit") sefer = "Bereshit";
-    else if(split[0] == "shmot") sefer = "Shmot";
-    else if(split[0] == "vayikra") sefer = "Vayikra";
-    else if(split[0] == "bmidbar") sefer = "B’midbar";
-    else if(split[0] == "dvarim") sefer = "D’varim";
+    if(split[0] == "bereshit") sefer = "בראשית"; // "Bereshit";
+    else if(split[0] == "shmot") sefer = "שמות"; // "Shmot";
+    else if(split[0] == "vayikra") sefer = "ויקרא"; // "Vayikra";
+    else if(split[0] == "bmidbar") sefer = "במדבר"; // "B’midbar";
+    else if(split[0] == "dvarim") sefer = "דברים"; // "D’varim";
 
     return sefer + " " + split[1];
 }
