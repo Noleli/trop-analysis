@@ -636,7 +636,19 @@ function dotooltip(d) {
 }
 
 function graphclick(d) {
-    console.log(disaggregated.filter(function(p) { return p.sefer == d.values.sefer && p.perek == d.values.perek && p.count > 0 }));
+    var pasuklist = disaggregated.filter(function(p) { return p.sefer == d.values.sefer && p.perek == d.values.perek && p.count > 0 });
+    var detailsDiv = d3.select("#detailcontainer").append("div")
+        .attr("id", "details");
+
+    detailsDiv.append("p").html(pasuklist);
+
+    d3.select("body")
+        .on("keydown", function(e) {
+            // e.preventDefault();
+            console.log(d3.event);
+            if(d3.event.keyCode == 27) detailsDiv.remove();
+            d3.select("body").on("keydown", null);
+        });
 }
 
 var locationformat = function(t) {
