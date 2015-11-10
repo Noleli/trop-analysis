@@ -524,6 +524,23 @@ var tooltipg = graphsvg.append("g")
     .attr("height", graphMargin.top)
     .attr("transform", "translate(" + graphMargin.left + "," + tooltipvmargin + ")");
 
+var graphcontrols = tooltipg.append("g")
+    .attr("class", "graphcontrols")
+    .attr("transform", "translate(" + (graphWidth - 10) + ")");
+
+var perperekcontrol = graphcontrols.append("path")
+    .datum("norm")
+    .attr("d", "M 0,0 L 50,0")
+    .on("click", switchYvalue)
+    .append("text")
+        .text("Per Perek");
+
+graphcontrols.append("text")
+    .attr("transform", "translate(" + (-perperekcontrol[0][0].getComputedTextLength() - 10) + ")")
+    .text("Counts")
+    .datum("count")
+    .on("click", switchYvalue);
+
 var byperekdata;
 // d3.json("byperek_full.json", function(byperekjson) {
 //     byperekdata = d3.map(byperekjson, function(d) { return d.seq });
@@ -546,13 +563,14 @@ var byperekdata;
     });
 }*/
 
+var yValue = "norm";
 function graph() {
     // var data = byperekdata.get(seq).sources;
     var data = aggregate(disaggregated, "perek"); // aggregate by perek
     var bar = barg.selectAll("rect.bar").data(data, function(d) { return d.key });
     // console.log(data);
 
-    graphy.domain([0, d3.max(data.map(function(d) { return d.values.norm }))]);        
+    graphy.domain([0, d3.max(data.map(function(d) { return d.values[yValue] }))]);        
 
     var barenter = bar.enter()
         // .append("a")
@@ -561,8 +579,8 @@ function graph() {
                 .attr("class", "bar")
                 .attr("width", barwidth)
                 .attr("x", function(d) { return graphx(d.key) })
-                .attr("y", function(d) { return graphy(d.values.norm) })
-                .attr("height", function(d) { return (graphHeight-graphMargin.bottom-graphMargin.top) - graphy(d.values.norm) })
+                .attr("y", function(d) { return graphy(d.values[yValue]) })
+                .attr("height", function(d) { return (graphHeight-graphMargin.bottom-graphMargin.top) - graphy(d.values[yValue]) })
                 .on("mouseover", dotooltip)
                 .on("mouseout", function(d) { tooltipg.selectAll("g.tooltip").remove()})
                 .on("click", graphclick);
@@ -571,18 +589,18 @@ function graph() {
     // bar
     //     .attr("title", function(d) { return d.index })
     bar.transition().duration(250)
-        .attr("y", function(d) { return graphy(d.values.norm) })
-        .attr("height", function(d) { return (graphHeight-graphMargin.bottom-graphMargin.top) - graphy(d.values.norm) });
+        .attr("y", function(d) { return graphy(d.values[yValue]) })
+        .attr("height", function(d) { return (graphHeight-graphMargin.bottom-graphMargin.top) - graphy(d.values[yValue]) });
 
     bar.exit().transition().duration(250)
         .attr("height", 1)
         .attr("y", graphHeight-graphMargin.bottom-graphMargin.top);
 }
 
-function initgraph() {
-    var initdata = perekindex.map(function(i) { return { index: i, norm: 0 }});
-    graphUpdate(initdata);
-}
+// function initgraph() {
+//     var initdata = perekindex.map(function(i) { return { index: i, norm: 0 }});
+//     graphUpdate(initdata);
+// }
 
 function aggregate(data, by) {
     var aggregated;
@@ -637,18 +655,31 @@ function dotooltip(d) {
 
 function graphclick(d) {
     var pasuklist = disaggregated.filter(function(p) { return p.sefer == d.values.sefer && p.perek == d.values.perek && p.count > 0 });
-    var detailsDiv = d3.select("#detailcontainer").append("div")
-        .attr("id", "details");
+    var detailsDiv = d3.select("#detailoutercontainer").append("div")
+        .attr("id", "detailcontainer")
+        .append("div")
+            .attr("id", "details");
 
-    detailsDiv.append("p").html(pasuklist);
+    // detailsDiv.append("p").html(pasuklist[0].pasuk);
+    pasuklist.forEach(function(p) {
+        detailsDiv.append("p").html(p.sefer + " " + p.perek + " " + p.pasuk);
+    });
 
     d3.select("body")
         .on("keydown", function(e) {
             // e.preventDefault();
-            console.log(d3.event);
-            if(d3.event.keyCode == 27) detailsDiv.remove();
-            d3.select("body").on("keydown", null);
+            // console.log(d3.event);
+            if(d3.event.keyCode == 27) {
+                d3.select("#detailcontainer").remove();
+                d3.select("body").on("keydown", null);
+            }
         });
+}
+
+function switchYvalue(d) {
+    console.log(d);
+    yValue = d;
+    graph();
 }
 
 var locationformat = function(t) {

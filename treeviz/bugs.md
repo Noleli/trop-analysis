@@ -1,7 +1,7 @@
 x clicking on sof pasuk behavior
 x clicking back to something that had already been selected shows the previously selected child as clicked
     x now it doesn't show as clicked, but the lines are wrong
-- typesetting
+x typesetting
     - smaller squares, please
 - clicking on a depth 0 that's already the only one clicked collapses it (as a way to reset)
 - active link line should be on top (z)
@@ -25,6 +25,6 @@ x minify data and try to split it up for parallel loading
 - clicking on a graph bar should show individual p'sukim within that perek
     - if there are fewer than N psukim total, show all of them regardless of which is clicked
 - 10 commandments
-- click affordance, something on hover
+x click affordance, something on hover
 x hebrew axis labels
 - y axis label
