@@ -55,7 +55,7 @@ var probformat = d3.format(".1%");
 var countformat = d3.format(",");
 
 // d3.json("sequencetree-d3format.json", function(root) {
-var tropnames = d3.map([{"char": "\u0597", "name": "revii", "heb": "רְבִ֗יע"}, {"char": "\u059d", "name": "gereshmukdam"}, {"char": "\u05a6", "name": "merkhakfula"}, {"char": "\u059e", "name": "gershayim", "heb": "גֵּרְשַׁ֞יִם"}, {"char": "\u059b", "name": "tevir", "heb": "תְּבִ֛יר"}, {"char": "\u059f", "name": "karnepara"}, {"char": "\u0595", "name": "gadol", "heb": "גָּד֕וֹל"}, {"char": "\u05a0", "name": "telishagedola"}, {"char": "\u0599", "name": "pashta", "heb": "פַּשְׁטָא֙"}, {"char": "\u0593", "name": "shalshelet"}, {"char": "\u0596", "name": "tipkha", "heb": "טִפְחָ֖א"}, {"char": "\u059a", "name": "yetiv"}, {"char": "\u0592", "name": "segol", "heb": "סְגוֹל֒"}, {"char": "\u05aa", "name": "yerakhbenyomo", "heb": "יֵרֶח בֶּן יוֹמ֪וֹ"}, {"char": "\u05ae", "name": "zarka"}, {"char": "\u05a3", "name": "munakh", "heb": "מֻנַּ֣ח"}, {"char": "\u05a5", "name": "merkha", "heb": "מֵרְכָ֥א"}, {"char": "\u05a8", "name": "kadma", "heb": "קַדְמָ֨א"}, {"char": "\u0591", "name": "etnakhta", "heb": "אֶתְנַחְתָּ֑א"}, {"char": "\u05c3", "name": "sofpasuk", "heb": "סוֹף פָּסוּק׃"}, {"char": "\u0598", "name": "tsinnorit"}, {"char": "\u059c", "name": "geresh", "heb": "גֵּ֜רֵשׁ"}, {"char": "\u05a9", "name": "telishaketana"}, {"char": "\u05a7", "name": "darga", "heb": "דַּרְגָּ֧א"}, {"char": "\u05a1", "name": "pazer"}, {"char": "\u05a4", "name": "mapakh", "heb": "מַהְפַּ֤ך"}, {"char": "\u0594", "name": "katan", "heb": "קָטָ֔ן"}], function(t) { return t.name });
+var tropnames = d3.map([{"char": "\u0597", "name": "revii", "heb": "רְבִ֗יע"}, {"char": "\u059d", "name": "gereshmukdam"}, {"char": "\u05a6", "name": "merkhakfula", "heb": "מֵרְכָא כּפוּלָ֦ה"}, {"char": "\u059e", "name": "gershayim", "heb": "גֵּרְשַׁ֞יִם"}, {"char": "\u059b", "name": "tevir", "heb": "תְּבִ֛יר"}, {"char": "\u059f", "name": "karnepara", "heb": "קַרְנֵי פָרָ֟ה"}, {"char": "\u0595", "name": "gadol", "heb": "גָּד֕וֹל"}, {"char": "\u05a0", "name": "telishagedola", "heb": "תְּ֠לִישָא גְדוֹלָה"}, {"char": "\u0599", "name": "pashta", "heb": "פַּשְׁטָא֙"}, {"char": "\u0593", "name": "shalshelet", "heb": "שַׁלְשֶׁ֓לֶת"}, {"char": "\u0596", "name": "tipkha", "heb": "טִפְחָ֖א"}, {"char": "\u059a", "name": "yetiv", "heb": "יְ֚תִיב"}, {"char": "\u0592", "name": "segol", "heb": "סְגוֹל֒"}, {"char": "\u05aa", "name": "yerakhbenyomo", "heb": "יֵרֶח בֶּן יוֹמ֪וֹ"}, {"char": "\u05ae", "name": "zarka", "heb": "זַרְקָא֮"}, {"char": "\u05a3", "name": "munakh", "heb": "מֻנַּ֣ח"}, {"char": "\u05a5", "name": "merkha", "heb": "מֵרְכָ֥א"}, {"char": "\u05a8", "name": "kadma", "heb": "קַדְמָ֨א"}, {"char": "\u0591", "name": "etnakhta", "heb": "אֶתְנַחְתָּ֑א"}, {"char": "\u05c3", "name": "sofpasuk", "heb": "סוֹף פָּסוּק׃"}, {"char": "\u0598", "name": "tsinnorit", "heb": "צִנּוֹרִת֘"}, {"char": "\u059c", "name": "geresh", "heb": "גֵּ֜רֵשׁ"}, {"char": "\u05a9", "name": "telishaketana", "heb": "תְּלִישָא קְטַנָּה֩"}, {"char": "\u05a7", "name": "darga", "heb": "דַּרְגָּ֧א"}, {"char": "\u05a1", "name": "pazer", "heb": "פָּזֵ֡ר"}, {"char": "\u05a4", "name": "mapakh", "heb": "מַהְפַּ֤ך"}, {"char": "\u0594", "name": "katan", "heb": "קָטָ֔ן"}], function(t) { return t.name });
 // var treePreD3 = [];
 
 var tropstrings;
@@ -653,9 +653,17 @@ function dotooltip(d) {
         .attr("height", graphMargin.top - 2*tooltipvmargin);
 }
 
+// init the modal
+$(function() {
+    $("#detailoutercontainer").easyModal({
+        // hasVariableWidth: true,
+        // top: 100
+    });
+});
 function graphclick(d) {
     var pasuklist = disaggregated.filter(function(p) { return p.sefer == d.values.sefer && p.perek == d.values.perek && p.count > 0 });
-    var detailsDiv = d3.select("#detailoutercontainer").append("div")
+    console.log(pasuklist);
+    /*var detailsDiv = d3.select("#detailoutercontainer").append("div")
         .attr("id", "detailcontainer")
         .append("div")
             .attr("id", "details");
@@ -673,8 +681,23 @@ function graphclick(d) {
                 d3.select("#detailcontainer").remove();
                 d3.select("body").on("keydown", null);
             }
+        });*/
+
+    d3.select("#details").html("");
+    var textlist = [];
+    // http://www.sefaria.org/api/texts/Exodus.16?lang=he&commentary=0&context=0
+    d3.jsonp("http://www.sefaria.org/api/texts/" + linkformat(d.key) + "?lang=he&commentary=0&context=0&callback={callback}", function(r) {
+        textlist = d3.map(r.he.map(function(t,p) { return {'pasuk': p+1, 'text': t}}), function(p) { return p.pasuk });
+        console.log(textlist);
+
+        pasuklist.forEach(function(p) {
+            console.log(p.pasuk, textlist[p.pasuk]);
+            d3.select("#details").append("p").html(textlist.get(p.pasuk).text); //p.sefer + " " + p.perek + " " + p.pasuk);
         });
+        $("#detailoutercontainer").trigger("openModal");
+    });
 }
+
 
 function switchYvalue(d) {
     console.log(d);
