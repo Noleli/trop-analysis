@@ -117,6 +117,18 @@ svg {
     font-weight: bold;
 }
 
+.graphcontrolbox {
+    fill: none;
+    stroke: #000;
+    stroke-width: 1px;
+}
+
+.graphcontrolhiddenbox {
+    fill: none;
+    stroke: #888;
+    stroke-width: 2px;
+}
+
 
 /*#detailcontainer {
     text-align: center;
@@ -149,4 +161,11 @@ svg {
     font-family: "Times New Roman";
     font-size: 36px;
     /*margin: auto;*/
+}
+
+#prefs {
+    direction: ltr;
+    background-color: #fff;
+    border: 1px solid #000;
+    padding: 20px;
 }

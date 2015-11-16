@@ -476,7 +476,7 @@ function collapse(d) {
 
 var perekindex = ["bereshit,1","bereshit,2","bereshit,3","bereshit,4","bereshit,5","bereshit,6","bereshit,7","bereshit,8","bereshit,9","bereshit,10","bereshit,11","bereshit,12","bereshit,13","bereshit,14","bereshit,15","bereshit,16","bereshit,17","bereshit,18","bereshit,19","bereshit,20","bereshit,21","bereshit,22","bereshit,23","bereshit,24","bereshit,25","bereshit,26","bereshit,27","bereshit,28","bereshit,29","bereshit,30","bereshit,31","bereshit,32","bereshit,33","bereshit,34","bereshit,35","bereshit,36","bereshit,37","bereshit,38","bereshit,39","bereshit,40","bereshit,41","bereshit,42","bereshit,43","bereshit,44","bereshit,45","bereshit,46","bereshit,47","bereshit,48","bereshit,49","bereshit,50","shmot,1","shmot,2","shmot,3","shmot,4","shmot,5","shmot,6","shmot,7","shmot,8","shmot,9","shmot,10","shmot,11","shmot,12","shmot,13","shmot,14","shmot,15","shmot,16","shmot,17","shmot,18","shmot,19","shmot,20","shmot,21","shmot,22","shmot,23","shmot,24","shmot,25","shmot,26","shmot,27","shmot,28","shmot,29","shmot,30","shmot,31","shmot,32","shmot,33","shmot,34","shmot,35","shmot,36","shmot,37","shmot,38","shmot,39","shmot,40","vayikra,1","vayikra,2","vayikra,3","vayikra,4","vayikra,5","vayikra,6","vayikra,7","vayikra,8","vayikra,9","vayikra,10","vayikra,11","vayikra,12","vayikra,13","vayikra,14","vayikra,15","vayikra,16","vayikra,17","vayikra,18","vayikra,19","vayikra,20","vayikra,21","vayikra,22","vayikra,23","vayikra,24","vayikra,25","vayikra,26","vayikra,27","bmidbar,1","bmidbar,2","bmidbar,3","bmidbar,4","bmidbar,5","bmidbar,6","bmidbar,7","bmidbar,8","bmidbar,9","bmidbar,10","bmidbar,11","bmidbar,12","bmidbar,13","bmidbar,14","bmidbar,15","bmidbar,16","bmidbar,17","bmidbar,18","bmidbar,19","bmidbar,20","bmidbar,21","bmidbar,22","bmidbar,23","bmidbar,24","bmidbar,25","bmidbar,26","bmidbar,27","bmidbar,28","bmidbar,29","bmidbar,30","bmidbar,31","bmidbar,32","bmidbar,33","bmidbar,34","bmidbar,35","bmidbar,36","dvarim,1","dvarim,2","dvarim,3","dvarim,4","dvarim,5","dvarim,6","dvarim,7","dvarim,8","dvarim,9","dvarim,10","dvarim,11","dvarim,12","dvarim,13","dvarim,14","dvarim,15","dvarim,16","dvarim,17","dvarim,18","dvarim,19","dvarim,20","dvarim,21","dvarim,22","dvarim,23","dvarim,24","dvarim,25","dvarim,26","dvarim,27","dvarim,28","dvarim,29","dvarim,30","dvarim,31","dvarim,32","dvarim,33","dvarim,34"];
 
-var graphMargin = {left: 4, right: 50, top: 55, bottom: 18};
+var graphMargin = {left: 20, right: 66, top: 55, bottom: 18};
 var graphWidth = window.innerWidth - 20;
 
 var graphsvg = d3.select("#graphcontainer")
@@ -524,22 +524,53 @@ var tooltipg = graphsvg.append("g")
     .attr("height", graphMargin.top)
     .attr("transform", "translate(" + graphMargin.left + "," + tooltipvmargin + ")");
 
-var graphcontrols = tooltipg.append("g")
-    .attr("class", "graphcontrols")
-    .attr("transform", "translate(" + (graphWidth - 10) + ")");
+// var graphcontrolWidth = 180;
+// var graphcontrols = graphsvg.append("g")
+//     .attr("class", "graphcontrols")
+//     .attr("transform", "translate(" + (graphWidth - (graphcontrolWidth + tooltiphpadding)) + ", " + (-tooltipvmargin) + ")");
 
-var perperekcontrol = graphcontrols.append("path")
-    .datum("norm")
-    .attr("d", "M 0,0 L 50,0")
-    .on("click", switchYvalue)
-    .append("text")
-        .text("Per Perek");
+// graphcontrols.append("rect")
+//     .attr("class", "graphcontrolbox")
+//     .attr("width", graphcontrolWidth)
+//     .attr("height", 25)
+//     .attr("x", 0)
+//     .attr("y", 0)
+//     .attr("rx", 5)
+//     .attr("ry", 5);
 
-graphcontrols.append("text")
-    .attr("transform", "translate(" + (-perperekcontrol[0][0].getComputedTextLength() - 10) + ")")
-    .text("Counts")
-    .datum("count")
-    .on("click", switchYvalue);
+// var normbox = graphcontrols.append("rect")
+//     .attr("class", "graphcontrolhiddenbox")
+//     .attr("height", 20)
+//     .datum("norm")
+//     .on("click", switchYvalue);
+
+// var normtext = graphcontrols.append("text")
+//     .text("Per Perek");
+// normbox.attr("width", normtext[0][0].getComputedTextLength());
+
+// var countbox = graphcontrols.append("rect")
+//     .attr("class", "graphcontrolhiddenbox")
+//     .attr("height", 20)
+//     .datum("count")
+//     .on("click", switchYvalue);
+
+// var counttext = graphcontrols.append("text")
+//     .text("Counts");
+// countbox.attr("width", counttext[0][0].getComputedTextLength());
+
+// var perperekcontrol = graphcontrols.append("path")
+//     .datum("norm")
+//     .attr("d", "M 0,0 L 50,0")
+    // .on("click", switchYvalue)
+
+// .append("text")
+//         .text("Per Perek");
+
+// graphcontrols.append("text")
+//     .attr("transform", "translate(" + (-perperekcontrol[0][0].getComputedTextLength() - 10) + ")")
+//     .text("Counts")
+//     .datum("count")
+//     .on("click", switchYvalue);
 
 var byperekdata;
 // d3.json("byperek_full.json", function(byperekjson) {
@@ -639,7 +670,7 @@ function dotooltip(d) {
         .text(locationformat(d.key))
         .attr("transform", "translate(" + tooltiphpadding + "," + 13 + ")")
         .attr("class", "location");
-    tooltip.attr("transform", "translate(" + (graphx(d.key)) + ")");
+    
     var occurrencestext = tooltip.append("text")
         .text(d.values.count + (d.values.count == 1 ? " occurrence" : " occurrences"))
             .attr("transform", "translate(" + tooltiphpadding + "," + 27 + ")");
@@ -651,6 +682,8 @@ function dotooltip(d) {
     ttbgrect
         .attr("width", ttwidth + 2*tooltiphpadding)
         .attr("height", graphMargin.top - 2*tooltipvmargin);
+
+    tooltip.attr("transform", "translate(" + (graphx(d.key) - ttwidth/2) + ")");
 }
 
 // init the modal
@@ -744,6 +777,27 @@ d3.select(window).on("resize", function() {
     barg.selectAll(".bar")
         .attr("width", barwidth)
         .attr("x", function(d) { return graphx(d.index) });
+});
+
+
+
+
+
+
+
+
+
+
+
+$(function() {
+    $("#prefs").easyModal({
+        // hasVariableWidth: true,
+        // top: 100
+    });
+});
+
+d3.select("#cog").on("click", function() {
+    $("#prefs").trigger("openModal");
 });
 
 

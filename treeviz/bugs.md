@@ -17,14 +17,19 @@ x window resizing
 x transitions for tree (reshuffle columns?)
 - stats/tracking
 x minify data and try to split it up for parallel loading
-- what's going on at merkha-tipkha-merkha-tipkha? (gone sometimes…)
-- what's going on in telishaketana-tipkha?
 - clean up stress-only doublings (like pashta-pashta pashta-pashta)
 - add row-multiplied probabilities (global rather than conditional)
 - width adjusting can be weird. and needs to take into account the horizontal scrollbar for some reason
-- clicking on a graph bar should show individual p'sukim within that perek
-    - if there are fewer than N psukim total, show all of them regardless of which is clicked
+- individual psukim: add metadata to popovers
+- individual psukim: tweak css
+- individual psukim: loading animation before api works
 - 10 commandments
 x click affordance, something on hover
 x hebrew axis labels
 - y axis label
+- replace jq with http://zeptojs.com/ for speed? (test it, anyway)
+- can't get psukim for sof pasuk (and maybe others) for shmot 20
+x center tooltip over bar and increase left margin
+
+- what's going on at merkha-tipkha-merkha-tipkha? (gone sometimes…)
+- what's going on in telishaketana-tipkha?

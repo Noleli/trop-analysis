@@ -12,6 +12,39 @@
     </head>
     <body dir="rtl">
 
+        <div id="cog"><em>i</em></div>
+        <div id="prefs">
+            <p>Yo, this is QC.</p>
+            <p>Bar graph shows
+                <div class="radio">
+                    <label>
+                        <input type="radio" name="graphValues" id="norm" value="norm" checked>
+                        Number of sequence occurences, normalized by the number of <em>p'sukim</em> in a <em>perek</em>
+                    </label>
+                </div>
+                <div class="radio">
+                    <label>
+                        <input type="radio" name="graphValues" id="count" value="count">
+                        Raw count of sequence occurences in that <em>perek</em>
+                    </label>
+                </div>
+            </p>
+
+            <p>Search for sequences
+                <div class="radio">
+                    <label>
+                        <input type="radio" name="searchFrom" id="anywhere" value="anywhere" checked>
+                        Anywhere in a <em>pasuk</em>
+                    </label>
+                </div>
+                <div class="radio">
+                    <label>
+                        <input type="radio" name="searchFrom" id="beginning" value="beginning">
+                        Only from the beginning of a <em>pasukm</em>
+                    </label>
+                </div>
+            </p>
+        </div>
         <div id="vizcontainer"></div>
         <div id="graphcontainer"></div>
         <div id="detailoutercontainer">
