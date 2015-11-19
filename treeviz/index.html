@@ -1,55 +1,93 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <meta charset="utf-8" />
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>Trop sequence tree</title>
 
+        <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet">
         <link href="style.css" rel="stylesheet">
         <script type="text/javascript" src="d3.min.js"></script>
         <script type="text/javascript" src="d3.jsonp.js"></script>
         <script type="text/javascript" src="jquery.min.js"></script>
-        <script type="text/javascript" src="jquery.easyModal.js"></script>
+        <script type="text/javascript" src="bootstrap/js/bootstrap.min.js"></script>
+        <!-- // <script type="text/javascript" src="jquery.easyModal.js"></script> -->
     </head>
     <body dir="rtl">
 
-        <div id="cog"><em>i</em></div>
-        <div id="prefs">
-            <p>Yo, this is QC.</p>
-            <p>Bar graph shows
-                <div class="radio">
-                    <label>
-                        <input type="radio" name="graphValues" id="norm" value="norm" checked>
-                        Number of sequence occurences, normalized by the number of <em>p'sukim</em> in a <em>perek</em>
-                    </label>
-                </div>
-                <div class="radio">
-                    <label>
-                        <input type="radio" name="graphValues" id="count" value="count">
-                        Raw count of sequence occurences in that <em>perek</em>
-                    </label>
-                </div>
-            </p>
+        <div id="cog" data-toggle="modal" data-target="#prefs"><span class="glyphicon glyphicon-cog"></span></div>
+        <div class="modal fade" id="prefs" tabindex="-1" role="dialog" aria-labelledby="prefsLabel">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="prefsLabel">Quantified Cantillation Settings</h4>
+                    </div>
+                    <div class="modal-body">
+                        <p>Yo, this is QC.</p>
+                        <p>Bar graph shows
+                            <div class="radio">
+                                <label>
+                                    <input type="radio" class="graphValues" name="graphValues" id="pref_norm" value="norm" data-value="norm" checked>
+                                    Number of sequence occurences, normalized by the number of <em>p'sukim</em> in a <em>perek</em>
+                                </label>
+                            </div>
+                            <div class="radio">
+                                <label>
+                                    <input type="radio" class="graphValues" name="graphValues" id="pref_count" value="count" data-value="count">
+                                    Raw count of sequence occurences in that <em>perek</em>
+                                </label>
+                            </div>
+                        </p>
 
-            <p>Search for sequences
-                <div class="radio">
-                    <label>
-                        <input type="radio" name="searchFrom" id="anywhere" value="anywhere" checked>
-                        Anywhere in a <em>pasuk</em>
-                    </label>
+                        <p>Search for sequences
+                            <div class="radio">
+                                <label>
+                                    <input type="radio" name="searchFrom" id="anywhere" value="anywhere" checked>
+                                    Anywhere in a <em>pasuk</em>
+                                </label>
+                            </div>
+                            <div class="radio">
+                                <label>
+                                    <input type="radio" name="searchFrom" id="beginning" value="beginning">
+                                    Only from the beginning of a <em>pasuk</em>
+                                </label>
+                            </div>
+                        </p>
+                    </div>
+                    <!--<div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary">Save changes</button>
+                    </div>-->
                 </div>
-                <div class="radio">
-                    <label>
-                        <input type="radio" name="searchFrom" id="beginning" value="beginning">
-                        Only from the beginning of a <em>pasukm</em>
-                    </label>
-                </div>
-            </p>
+            </div>
         </div>
+
+
+
+
+
         <div id="vizcontainer"></div>
         <div id="graphcontainer"></div>
-        <div id="detailoutercontainer">
+        <!-- <div id="detailoutercontainer">
             <div id="detailsclose" class="close">╳</div>
             <div id="details"></div>
+        </div> -->
+        <div class="modal fade" id="detailsModal" tabindex="-1" role="dialog" aria-labelledby="detailsModalLabel">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="detailsModalLabel">Pasuk-level detail</h4>
+                    </div>
+                    <div class="modal-body" id="details"></div>
+                    <!--<div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary">Save changes</button>
+                    </div>-->
+                </div>
+            </div>
         </div>
 
         <script type="text/javascript" src="tropsequences-localcompute.js"></script>

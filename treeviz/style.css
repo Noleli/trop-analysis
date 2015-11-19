@@ -104,16 +104,16 @@ svg {
     stroke: #000;
 }
 
-#graphcontainer rect.tooltip {
+#graphcontainer rect.mytooltip {
     fill: rgba(40,40,40,0.75);
 }
 
-#graphcontainer .tooltip text {
+#graphcontainer .mytooltip text {
     fill: #fff;
     font-size: 13px;
 }
 
-#graphcontainer .tooltip text.location {
+#graphcontainer .mytooltip text.location {
     font-weight: bold;
 }
 
@@ -148,24 +148,38 @@ svg {
     border-radius: 30px;
 }
 
-#detailsclose {
+/*#detailsclose {
     cursor: pointer;
     float: left;
-}
+}*/
 
 #details {
-    width: 100%;
+    /*width: 100%;
     height: 100%;
-    overflow-y: scroll;
+    overflow-y: scroll;*/
 
     font-family: "Times New Roman";
-    font-size: 36px;
+    font-size: 24px;
     /*margin: auto;*/
+}
+#detailsModal .modal-title {
+    direction: ltr;
 }
 
 #prefs {
     direction: ltr;
-    background-color: #fff;
+    /*background-color: #fff;
     border: 1px solid #000;
-    padding: 20px;
+    padding: 20px;*/
+}
+
+#cog {
+    position: fixed;
+    direction: ltr;
+    left: 25px;
+    color: #a5a5a5;
+}
+
+#cog:hover {
+    color: #555;
 }

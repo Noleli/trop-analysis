@@ -613,7 +613,7 @@ function graph() {
                 .attr("y", function(d) { return graphy(d.values[yValue]) })
                 .attr("height", function(d) { return (graphHeight-graphMargin.bottom-graphMargin.top) - graphy(d.values[yValue]) })
                 .on("mouseover", dotooltip)
-                .on("mouseout", function(d) { tooltipg.selectAll("g.tooltip").remove()})
+                .on("mouseout", function(d) { tooltipg.selectAll("g.mytooltip").remove()})
                 .on("click", graphclick);
 
 
@@ -656,13 +656,13 @@ function aggregate(data, by) {
 
 var normformat = d3.format(".2f");
 function dotooltip(d) {
-    tooltipg.selectAll("g.tooltip").remove();
+    tooltipg.selectAll("g.mytooltip").remove();
     var tooltip = tooltipg.append("g")
-        .attr("class", "tooltip")
+        .attr("class", "mytooltip")
         .attr("direction", "ltr");
         // .attr("transform", "translate(" + graphx(d.index) + ")")
 
-    var ttbgrect = tooltip.append("rect").attr("class", "tooltip")
+    var ttbgrect = tooltip.append("rect").attr("class", "mytooltip")
         .attr("rx", 4)
         .attr("ry", 4);
 
@@ -687,12 +687,12 @@ function dotooltip(d) {
 }
 
 // init the modal
-$(function() {
-    $("#detailoutercontainer").easyModal({
-        // hasVariableWidth: true,
-        // top: 100
-    });
-});
+// $(function() {
+//     $("#detailoutercontainer").easyModal({
+//         // hasVariableWidth: true,
+//         // top: 100
+//     });
+// });
 function graphclick(d) {
     var pasuklist = disaggregated.filter(function(p) { return p.sefer == d.values.sefer && p.perek == d.values.perek && p.count > 0 });
     console.log(pasuklist);
@@ -727,16 +727,20 @@ function graphclick(d) {
             console.log(p.pasuk, textlist[p.pasuk]);
             d3.select("#details").append("p").html(textlist.get(p.pasuk).text); //p.sefer + " " + p.perek + " " + p.pasuk);
         });
-        $("#detailoutercontainer").trigger("openModal");
+        // $("#detailoutercontainer").trigger("openModal");
+        $("#detailsModal").modal("show");
     });
 }
 
 
 function switchYvalue(d) {
     console.log(d);
-    yValue = d;
+    yValue = d.value;
     graph();
 }
+d3.selectAll(".graphValues")
+    .datum(function() { return this.dataset; })
+    .on("change", switchYvalue);
 
 var locationformat = function(t) {
     var split = t.split(",");
@@ -777,9 +781,14 @@ d3.select(window).on("resize", function() {
     barg.selectAll(".bar")
         .attr("width", barwidth)
         .attr("x", function(d) { return graphx(d.index) });
+
+    d3.select("#cog")
+        .style({"top": (window.innerHeight - graphHeight - 48) + "px"});
 });
 
 
+d3.select("#cog")
+    .style({"top": (window.innerHeight - graphHeight - 48) + "px"});
 
 
 
@@ -788,17 +797,16 @@ d3.select(window).on("resize", function() {
 
 
 
+// $(function() {
+//     $("#prefs").easyModal({
+//         // hasVariableWidth: true,
+//         // top: 100
+//     });
+// });
 
-$(function() {
-    $("#prefs").easyModal({
-        // hasVariableWidth: true,
-        // top: 100
-    });
-});
-
-d3.select("#cog").on("click", function() {
-    $("#prefs").trigger("openModal");
-});
+// d3.select("#cog").on("click", function() {
+//     $("#prefs").trigger("openModal");
+// });
 
 
 
