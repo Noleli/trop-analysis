@@ -61,6 +61,9 @@ var tropnames = d3.map([{"char": "\u0597", "name": "revii", "heb": "רְבִ֗י
 var tropstrings;
 var disaggregated;
 
+var frombeginning = false;
+var frombeginningprefix = function() { return frombeginning ? "^" : "" }
+
 d3.json("tropstrings.json", function(root) {
     // jsonobj = root;
     tropstrings = root;
@@ -76,7 +79,7 @@ d3.json("tropstrings.json", function(root) {
     tropnames.forEach(function(t) {
         var node = {"name": tropnames.get(t).name, "char": tropnames.get(t).char, "heb": tropnames.get(t).heb};
         // console.log(node);
-        var exp = RegExp(node.char, "g");
+        var exp = RegExp(frombeginningprefix() + node.char, "g");
         node.count = d3.sum(tropstrings.filter(function(d) { return d.trop.search(exp) > -1 }).map(function(d) { return d.trop.match(exp).length }));
         // treePreD3.push(node);
 
@@ -309,7 +312,7 @@ function nodeclick(d) {
         // console.log(ancestrynames);
         tropnames.forEach(function(t) {
             var child = {"name": tropnames.get(t).name, "char": tropnames.get(t).char, "heb": tropnames.get(t).heb};
-            var exp = RegExp(ancestorstring + child.char, "g");
+            var exp = RegExp(frombeginningprefix() + ancestorstring + child.char, "g");
             // console.log(child);
             
             // this line can do it in one line, but moving it out to a loop so we can also do sources for the graph at the same time
@@ -334,7 +337,7 @@ function nodeclick(d) {
 
     // do graph location data
     disaggregated = [];
-    var exp = RegExp(ancestorstring, "g");
+    var exp = RegExp(frombeginningprefix() + ancestorstring, "g");
     tropstrings.forEach(function(p) {
         var pasukobj = new Object();
         pasukobj.sefer = p.sefer;
@@ -464,6 +467,15 @@ function collapse(d) {
 //         d.children.forEach(collapse);
 //         d._children = null;
 //     }
+// }
+
+// function regraph() {
+//     // i feel like there's a way to do this in one line, but I can't think of it
+//     var clicked = nodes.filter(function(d) { return d.clicked });
+//     var maxclickeddepth = d3.max(clicked, function(d) { return d.depth });
+//     var maxclicked = clicked.filter(function(d) { return d.depth == maxclickeddepth })[0];
+
+//     nodeclick(maxclicked);
 // }
 
 
@@ -725,7 +737,7 @@ function graphclick(d) {
 
         pasuklist.forEach(function(p) {
             console.log(p.pasuk, textlist[p.pasuk]);
-            d3.select("#details").append("p").html(textlist.get(p.pasuk).text); //p.sefer + " " + p.perek + " " + p.pasuk);
+            d3.select("#details").append("tr").html("<td class='pasuknum'>" + p.pasuk + "</td><td class='pasuktext'>" + textlist.get(p.pasuk).text + "</td>"); //p.sefer + " " + p.perek + " " + p.pasuk);
         });
         // $("#detailoutercontainer").trigger("openModal");
         $("#detailsModal").modal("show");

@@ -162,9 +162,23 @@ svg {
     font-size: 24px;
     /*margin: auto;*/
 }
+
 #detailsModal .modal-title {
     direction: ltr;
 }
+
+#details .pasuknum {
+    font-size: 16px;
+    /*font-weight: bold;*/
+    padding-left: 12px;
+    padding-top: 8px;
+    text-align: left;
+}
+
+#details tr {
+    vertical-align: top;
+}
+
 
 #prefs {
     direction: ltr;

@@ -7,7 +7,7 @@ x typesetting
 - active link line should be on top (z)
 x if there's only 1 path forward, select it through the sof pasuk or till there's not
 x graph axis labels
-- toggle between normalized and counts
+x toggle between normalized and counts
 x graph tooltips or something
 x links to prakim in sefaria
 x transition to exit() is weird
@@ -30,6 +30,7 @@ x hebrew axis labels
 - replace jq with http://zeptojs.com/ for speed? (test it, anyway)
 - can't get psukim for sof pasuk (and maybe others) for shmot 20
 x center tooltip over bar and increase left margin
+- search from beginning of pasuk: what should happen if you've clicked a node whose ancestry doesn't exist in the other state?
 
 - what's going on at merkha-tipkha-merkha-tipkha? (gone sometimes…)
 - what's going on in telishaketana-tipkha?
