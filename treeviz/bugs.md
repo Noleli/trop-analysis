@@ -11,7 +11,7 @@ x toggle between normalized and counts
 x graph tooltips or something
 x links to prakim in sefaria
 x transition to exit() is weird
-- initial graph loading state
+- initial graph loading state (0 high)
 x window resizing
 - scrollbars in firefox
 x transitions for tree (reshuffle columns?)
@@ -20,17 +20,19 @@ x minify data and try to split it up for parallel loading
 - clean up stress-only doublings (like pashta-pashta pashta-pashta)
 - add row-multiplied probabilities (global rather than conditional)
 - width adjusting can be weird. and needs to take into account the horizontal scrollbar for some reason
-- individual psukim: add metadata to popovers
-- individual psukim: tweak css
+x individual psukim: add metadata to popovers
+x individual psukim: tweak css
 - individual psukim: loading animation before api works
 - 10 commandments
 x click affordance, something on hover
 x hebrew axis labels
 - y axis label
-- replace jq with http://zeptojs.com/ for speed? (test it, anyway)
 - can't get psukim for sof pasuk (and maybe others) for shmot 20
+- write up intro text in a tab of the modal
 x center tooltip over bar and increase left margin
 - search from beginning of pasuk: what should happen if you've clicked a node whose ancestry doesn't exist in the other state?
+- aggregate by parsha
+- colorcode conjunctive/disjunctive
 
 - what's going on at merkha-tipkha-merkha-tipkha? (gone sometimes…)
 - what's going on in telishaketana-tipkha?

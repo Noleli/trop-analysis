@@ -285,8 +285,9 @@ function ancestry(n, s) {
     // }
 }
 
+var ancestrynames = [];
 function nodeclick(d) {
-    var ancestrynames = ancestry(d).split(",").reverse(); // the ancestry string is backwards, so I have to do this silly thing.
+    ancestrynames = ancestry(d).split(",").reverse(); // the ancestry string is backwards, so I have to do this silly thing.
     // console.log(ancestrynames);
     // graph(ancestrynames.join(","));
 
@@ -728,7 +729,11 @@ function graphclick(d) {
             }
         });*/
 
-    d3.select("#details").html("");
+    d3.select("#detailsModalLabel").html(locationformat(d.key));
+    d3.select("#currentSearch").html(ancestrynames.map(function(d) { return tropnames.get(d).heb; } ).join(" "));
+    // d3.select("#details").html("loading...");
+    $("#detailsModal").modal("show");
+
     var textlist = [];
     // http://www.sefaria.org/api/texts/Exodus.16?lang=he&commentary=0&context=0
     d3.jsonp("http://www.sefaria.org/api/texts/" + linkformat(d.key) + "?lang=he&commentary=0&context=0&callback={callback}", function(r) {
@@ -740,7 +745,6 @@ function graphclick(d) {
             d3.select("#details").append("tr").html("<td class='pasuknum'>" + p.pasuk + "</td><td class='pasuktext'>" + textlist.get(p.pasuk).text + "</td>"); //p.sefer + " " + p.perek + " " + p.pasuk);
         });
         // $("#detailoutercontainer").trigger("openModal");
-        $("#detailsModal").modal("show");
     });
 }
 

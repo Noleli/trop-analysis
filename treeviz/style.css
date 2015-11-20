@@ -164,7 +164,9 @@ svg {
 }
 
 #detailsModal .modal-title {
-    direction: ltr;
+    /*direction: ltr;*/
+    font-size: 22px;
+    margin-right: 18px;
 }
 
 #details .pasuknum {
@@ -177,6 +179,12 @@ svg {
 
 #details tr {
     vertical-align: top;
+}
+
+#detailsModal #currentSearch {
+    font-family: "Times New Roman";
+    font-size: 20px;
+    margin-right: 18px;
 }
 
 
