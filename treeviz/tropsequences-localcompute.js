@@ -64,7 +64,8 @@ var disaggregated;
 var frombeginning = false;
 var frombeginningprefix = function() { return frombeginning ? "^" : "" }
 
-d3.json("tropstrings.json", function(root) {
+d3.json("tropstrings.json", init);
+function init(root) {
     // jsonobj = root;
     tropstrings = root;
 
@@ -83,7 +84,7 @@ d3.json("tropstrings.json", function(root) {
         node.count = d3.sum(tropstrings.filter(function(d) { return d.trop.search(exp) > -1 }).map(function(d) { return d.trop.match(exp).length }));
         // treePreD3.push(node);
 
-        nodes = nodes.concat(tree.nodes(node)); // this needs to go inside the loop because each trop parent is a root
+        if(node.count > 0) nodes = nodes.concat(tree.nodes(node)); // this needs to go inside the loop because each trop parent is a root
     });
 
     
@@ -124,7 +125,7 @@ d3.json("tropstrings.json", function(root) {
 
 
     initgraph();
-});
+}
 
 var pos = function(d, i) {
     // var xPos = x(d.depth * (hspace + tree.nodeSize()[0])) - tree.nodeSize()[0];
@@ -489,14 +490,6 @@ function collapse(d) {
 //     }
 // }
 
-// function regraph() {
-//     // i feel like there's a way to do this in one line, but I can't think of it
-//     var clicked = nodes.filter(function(d) { return d.clicked });
-//     var maxclickeddepth = d3.max(clicked, function(d) { return d.depth });
-//     var maxclicked = clicked.filter(function(d) { return d.depth == maxclickeddepth })[0];
-
-//     nodeclick(maxclicked);
-// }
 
 
 
@@ -734,7 +727,7 @@ function dotooltip(d) {
 // });
 function graphclick(d) {
     var pasuklist = disaggregated.filter(function(p) { return p.sefer == d.values.sefer && p.perek == d.values.perek && p.count > 0 });
-    console.log(pasuklist);
+    // console.log(pasuklist);
     /*var detailsDiv = d3.select("#detailoutercontainer").append("div")
         .attr("id", "detailcontainer")
         .append("div")
@@ -757,17 +750,17 @@ function graphclick(d) {
 
     d3.select("#detailsModalLabel").html(locationformat(d.key));
     d3.select("#currentSearch").html(ancestrynames.map(function(d) { return tropnames.get(d).heb; } ).join(" "));
-    // d3.select("#details").html("loading...");
+    d3.select("#details").html("");
     $("#detailsModal").modal("show");
 
     var textlist = [];
     // http://www.sefaria.org/api/texts/Exodus.16?lang=he&commentary=0&context=0
     d3.jsonp("http://www.sefaria.org/api/texts/" + linkformat(d.key) + "?lang=he&commentary=0&context=0&callback={callback}", function(r) {
         textlist = d3.map(r.he.map(function(t,p) { return {'pasuk': p+1, 'text': t}}), function(p) { return p.pasuk });
-        console.log(textlist);
+        // console.log(textlist);
 
         pasuklist.forEach(function(p) {
-            console.log(p.pasuk, textlist[p.pasuk]);
+            // console.log(p.pasuk, textlist[p.pasuk]);
             d3.select("#details").append("tr").html("<td class='pasuknum'>" + p.pasuk + "</td><td class='pasuktext'>" + textlist.get(p.pasuk).text + "</td>"); //p.sefer + " " + p.perek + " " + p.pasuk);
         });
         // $("#detailoutercontainer").trigger("openModal");
@@ -776,13 +769,33 @@ function graphclick(d) {
 
 
 function switchYvalue(d) {
-    console.log(d);
+    // console.log(d);
     yValue = d.value;
     graph();
 }
 d3.selectAll(".graphValues")
     .datum(function() { return this.dataset; })
     .on("change", switchYvalue);
+
+function switchSearchFrom(d) {
+    frombeginning = d.value == "beginning" ? true : false;
+    nodes = [];
+    depthsums = d3.map([], function(s) { return s.depth }); // I could probably just kill depthsums entirely. doubt i'm getting much performance gain from caching like this
+    init(tropstrings);
+// function regraph() {
+//     // i feel like there's a way to do this in one line, but I can't think of it
+    // var clicked = nodes.filter(function(d) { return d.clicked });
+    // var maxclickeddepth = d3.max(clicked, function(d) { return d.depth });
+    // var maxclicked = clicked.filter(function(d) { return d.depth == maxclickeddepth })[0];
+    // console.log(maxclicked);
+    // nodeclick(maxclicked);
+// }
+}
+d3.selectAll(".searchFrom")
+    .datum(function() { return this.dataset; })
+    .on("change", switchSearchFrom);
+
+
 
 var locationformat = function(t) {
     var split = t.split(",");

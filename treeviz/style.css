@@ -41,7 +41,7 @@ svg {
 }
 .node:hover text, .node.disabled:hover text {
     stroke: none;
-    fill: #1D3C8D;
+    fill: #3167F4;
 }
 .node.disabled text {
     fill: #777;

@@ -2,7 +2,6 @@ x clicking on sof pasuk behavior
 x clicking back to something that had already been selected shows the previously selected child as clicked
     x now it doesn't show as clicked, but the lines are wrong
 x typesetting
-    - smaller squares, please
 x clicking on a depth 0 that's already the only one clicked collapses it (as a way to reset)
 - active link line should be on top (z)
 x if there's only 1 path forward, select it through the sof pasuk or till there's not
@@ -36,3 +35,4 @@ x center tooltip over bar and increase left margin
 
 - what's going on at merkha-tipkha-merkha-tipkha? (gone sometimes…)
 - what's going on in telishaketana-tipkha?
+x katan-tevir-merkha-etnakhta: pasuk-level detail shows losts of psukim. (nm seems like something cached)
