@@ -120,6 +120,10 @@ d3.json("tropstrings.json", function(root) {
     links = tree.links(nodes);
 
     update();
+
+
+
+    initgraph();
 });
 
 var pos = function(d, i) {
@@ -298,6 +302,8 @@ function nodeclick(d) {
     //         collapse(n);
     //     }
     // });
+    var ancestorstring;
+    var collapsingroot = false;
     
     nodes = nodes.filter(function(n) {
         if(n.depth > d.depth) {
@@ -306,34 +312,47 @@ function nodeclick(d) {
         return n.depth <= d.depth;
     });
 
-    var ancestorstring = ancestrynames.map(function(a) { return tropnames.get(a).char }).join("");
-    if(d.children == undefined) { // it's never been calculated. I think this will always be true because collapse() now deletes children.
-        var newchildren = [];
-        
-        // console.log(ancestrynames);
-        tropnames.forEach(function(t) {
-            var child = {"name": tropnames.get(t).name, "char": tropnames.get(t).char, "heb": tropnames.get(t).heb};
-            var exp = RegExp(frombeginningprefix() + ancestorstring + child.char, "g");
-            // console.log(child);
-            
-            // this line can do it in one line, but moving it out to a loop so we can also do sources for the graph at the same time
-            child.count = d3.sum(tropstrings.filter(function(p) { return p.trop.search(exp) > -1 }).map(function(p) { return p.trop.match(exp).length }));
-            // child.count = 0;
-            
-
-            child.depth = d.depth + 1;
-            child.parent = d;
-            // console.log(exp);
-            // console.log(child);
-            if(child.count > 0) newchildren.push(child);
+    var maxdepth = d3.max(nodes.map(function(d) { return d.depth }));
+    if(d.depth == 0 && d.clicked && maxdepth == 0) {
+        nodes.forEach(function(n) {
+            n.clicked = false;
+            n.disabled = false;
         });
+        d.clicked = false;
+        d.disabled = false;
+        collapse(d);
+        collapsingroot = true;
+    }
+    else {
+        ancestorstring = ancestrynames.map(function(a) { return tropnames.get(a).char }).join("");
+        if(d.children == undefined) { // it's never been calculated. I think this will always be true because collapse() now deletes children.
+            var newchildren = [];
+            
+            // console.log(ancestrynames);
+            tropnames.forEach(function(t) {
+                var child = {"name": tropnames.get(t).name, "char": tropnames.get(t).char, "heb": tropnames.get(t).heb};
+                var exp = RegExp(frombeginningprefix() + ancestorstring + child.char, "g");
+                // console.log(child);
+                
+                // this line can do it in one line, but moving it out to a loop so we can also do sources for the graph at the same time
+                child.count = d3.sum(tropstrings.filter(function(p) { return p.trop.search(exp) > -1 }).map(function(p) { return p.trop.match(exp).length }));
+                // child.count = 0;
+                
 
-        // treePreD3.find(function() { return d }).children = children;
-        var children = tree.nodes(newchildren); //.reverse();
-        // console.log(children);
-        // d.children = tree.nodes(children);
-        d.children = children[0].sort(function(a,b) { return b.count - a.count });
-        // console.log(d);
+                child.depth = d.depth + 1;
+                child.parent = d;
+                // console.log(exp);
+                // console.log(child);
+                if(child.count > 0) newchildren.push(child);
+            });
+
+            // treePreD3.find(function() { return d }).children = children;
+            var children = tree.nodes(newchildren); //.reverse();
+            // console.log(children);
+            // d.children = tree.nodes(children);
+            d.children = children[0].sort(function(a,b) { return b.count - a.count });
+            // console.log(d);
+        }
     }
 
     // do graph location data
@@ -408,7 +427,7 @@ function nodeclick(d) {
         // links = links.concat(tree.links(nodes));
         // links = tree.links(nodes);
     }
-    else {
+    else if(!collapsingroot) {
         d.clicked = true;
         d.disabled = false;
 
@@ -611,6 +630,7 @@ var yValue = "norm";
 function graph() {
     // var data = byperekdata.get(seq).sources;
     var data = aggregate(disaggregated, "perek"); // aggregate by perek
+    // console.log(data);
     var bar = barg.selectAll("rect.bar").data(data, function(d) { return d.key });
     // console.log(data);
 
@@ -641,10 +661,16 @@ function graph() {
         .attr("y", graphHeight-graphMargin.bottom-graphMargin.top);
 }
 
-// function initgraph() {
-//     var initdata = perekindex.map(function(i) { return { index: i, norm: 0 }});
-//     graphUpdate(initdata);
-// }
+function initgraph() {
+    disaggregated = perekindex.map(function(i) {
+        var split = i.split(",");
+        var sefer = split[0];
+        var perek = split[1];
+        var pasuk = 1; // doesn't matter how many there are, but it's gonna try to agg, so we should have it
+        return { "sefer": sefer, "perek": perek, "pasuk": pasuk, numtrop: 1, count: 0 }
+    });
+    graph();
+}
 
 function aggregate(data, by) {
     var aggregated;

@@ -3,7 +3,7 @@ x clicking back to something that had already been selected shows the previously
     x now it doesn't show as clicked, but the lines are wrong
 x typesetting
     - smaller squares, please
-- clicking on a depth 0 that's already the only one clicked collapses it (as a way to reset)
+x clicking on a depth 0 that's already the only one clicked collapses it (as a way to reset)
 - active link line should be on top (z)
 x if there's only 1 path forward, select it through the sof pasuk or till there's not
 x graph axis labels
@@ -11,7 +11,7 @@ x toggle between normalized and counts
 x graph tooltips or something
 x links to prakim in sefaria
 x transition to exit() is weird
-- initial graph loading state (0 high)
+x initial graph loading state (0 high)
 x window resizing
 - scrollbars in firefox
 x transitions for tree (reshuffle columns?)
