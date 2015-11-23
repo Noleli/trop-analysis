@@ -13,7 +13,7 @@ x links to prakim in sefaria
 x transition to exit() is weird
 x initial graph loading state (0 high)
 x window resizing
-- scrollbars in firefox
+x scrollbars in firefox
 x transitions for tree (reshuffle columns?)
 - stats/tracking
 x minify data and try to split it up for parallel loading
@@ -22,7 +22,7 @@ x minify data and try to split it up for parallel loading
 - width adjusting can be weird. and needs to take into account the horizontal scrollbar for some reason
 x individual psukim: add metadata to popovers
 x individual psukim: tweak css
-- individual psukim: loading animation before api works
+x individual psukim: loading animation before api works
 - 10 commandments
 x click affordance, something on hover
 x hebrew axis labels
@@ -30,7 +30,7 @@ x hebrew axis labels
 - can't get psukim for sof pasuk (and maybe others) for shmot 20
 - write up intro text in a tab of the modal
 x center tooltip over bar and increase left margin
-- search from beginning of pasuk: what should happen if you've clicked a node whose ancestry doesn't exist in the other state?
+x search from beginning of pasuk: what should happen if you've clicked a node whose ancestry doesn't exist in the other state?
 - aggregate by parsha
 - colorcode conjunctive/disjunctive
 

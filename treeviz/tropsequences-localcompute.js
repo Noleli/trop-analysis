@@ -750,7 +750,7 @@ function graphclick(d) {
 
     d3.select("#detailsModalLabel").html(locationformat(d.key));
     d3.select("#currentSearch").html(ancestrynames.map(function(d) { return tropnames.get(d).heb; } ).join(" "));
-    d3.select("#details").html("");
+    d3.select("#detailsContainer").html('<div class="progress"><div class="progress-bar progress-bar-striped active" role="progressbar" style="width: 100%"></div></div>');
     $("#detailsModal").modal("show");
 
     var textlist = [];
@@ -758,7 +758,7 @@ function graphclick(d) {
     d3.jsonp("http://www.sefaria.org/api/texts/" + linkformat(d.key) + "?lang=he&commentary=0&context=0&callback={callback}", function(r) {
         textlist = d3.map(r.he.map(function(t,p) { return {'pasuk': p+1, 'text': t}}), function(p) { return p.pasuk });
         // console.log(textlist);
-
+        d3.select("#detailsContainer").html('<table id="details"></div>');
         pasuklist.forEach(function(p) {
             console.log(p.pasuk, textlist.get(p.pasuk));
             d3.select("#details").append("tr").html("<td class='pasuknum'>" + p.pasuk + "</td><td class='pasuktext'>" + textlist.get(p.pasuk).text + "</td>"); //p.sefer + " " + p.perek + " " + p.pasuk);
