@@ -3,6 +3,7 @@ x clicking back to something that had already been selected shows the previously
     x now it doesn't show as clicked, but the lines are wrong
 x typesetting
 x clicking on a depth 0 that's already the only one clicked collapses it (as a way to reset)
+- clicking on a depth 0 should only collapse it if maxdepth == 1
 - active link line should be on top (z)
 x if there's only 1 path forward, select it through the sof pasuk or till there's not
 x graph axis labels

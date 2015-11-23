@@ -48,7 +48,7 @@ var linkline = function(d) {
     var pathstr = "M" + startx + " " + starty + "C " + (startx-hspace/2) + " " + starty + ", " + (endx+hspace/2) + " " + endy + ", " + endx + " " + endy;
     return pathstr;
 }
-var jsonobj; // temp
+// var jsonobj; // temp
     // .projection(function(d) { return [d.y, d.x]; });
 
 var probformat = d3.format(".1%");
@@ -760,7 +760,7 @@ function graphclick(d) {
         // console.log(textlist);
 
         pasuklist.forEach(function(p) {
-            // console.log(p.pasuk, textlist[p.pasuk]);
+            console.log(p.pasuk, textlist.get(p.pasuk));
             d3.select("#details").append("tr").html("<td class='pasuknum'>" + p.pasuk + "</td><td class='pasuktext'>" + textlist.get(p.pasuk).text + "</td>"); //p.sefer + " " + p.perek + " " + p.pasuk);
         });
         // $("#detailoutercontainer").trigger("openModal");
@@ -782,6 +782,18 @@ function switchSearchFrom(d) {
     nodes = [];
     depthsums = d3.map([], function(s) { return s.depth }); // I could probably just kill depthsums entirely. doubt i'm getting much performance gain from caching like this
     init(tropstrings);
+
+    var depth = 0;
+    var oldQuery = ancestrynames.map(function(a) { return a }); // deep copy
+    var toclick = nodes.filter(function(d) { return d.depth == depth && d.name == oldQuery[depth] });
+
+    while(toclick.length > 0) {
+        // console.log(depth, toclick);
+        nodeclick(toclick[0]);
+        depth = depth + 1;
+        toclick = nodes.filter(function(d) { return d.depth == depth && d.name == oldQuery[depth] });
+    }
+
 // function regraph() {
 //     // i feel like there's a way to do this in one line, but I can't think of it
     // var clicked = nodes.filter(function(d) { return d.clicked });
@@ -835,7 +847,7 @@ d3.select(window).on("resize", function() {
     xaxisg.call(xAxis);
     barg.selectAll(".bar")
         .attr("width", barwidth)
-        .attr("x", function(d) { return graphx(d.index) });
+        .attr("x", function(d) { return graphx(d.key) });
 
     d3.select("#cog")
         .style({"top": (window.innerHeight - graphHeight - 48) + "px"});
