@@ -760,7 +760,7 @@ function graphclick(d) {
         // console.log(textlist);
         d3.select("#detailsContainer").html('<table id="details"></div>');
         pasuklist.forEach(function(p) {
-            console.log(p.pasuk, textlist.get(p.pasuk));
+            // console.log(p.pasuk, textlist.get(p.pasuk));
             d3.select("#details").append("tr").html("<td class='pasuknum'>" + p.pasuk + "</td><td class='pasuktext'>" + textlist.get(p.pasuk).text + "</td>"); //p.sefer + " " + p.perek + " " + p.pasuk);
         });
         // $("#detailoutercontainer").trigger("openModal");
@@ -857,9 +857,13 @@ d3.select(window).on("resize", function() {
 d3.select("#cog")
     .style({"top": (window.innerHeight - graphHeight - 48) + "px"});
 
+$("#cog").click(function() { $("#tab-settings").tab("show") });
 
+if(Cookies.get("firstload") != "no") {
+    $("#prefs").modal("show");
+}
 
-
+Cookies.set("firstload", "no", { expires: 7 });
 
 
 
