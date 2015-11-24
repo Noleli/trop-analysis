@@ -28,7 +28,7 @@ x click affordance, something on hover
 x hebrew axis labels
 - y axis label
 - can't get psukim for sof pasuk (and maybe others) for shmot 20
-- write up intro text in a tab of the modal
+x write up intro text in a tab of the modal
 x center tooltip over bar and increase left margin
 x search from beginning of pasuk: what should happen if you've clicked a node whose ancestry doesn't exist in the other state?
 - aggregate by parsha
