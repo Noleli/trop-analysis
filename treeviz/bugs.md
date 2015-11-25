@@ -33,6 +33,7 @@ x center tooltip over bar and increase left margin
 x search from beginning of pasuk: what should happen if you've clicked a node whose ancestry doesn't exist in the other state?
 - aggregate by parsha
 - colorcode conjunctive/disjunctive
+- add facebook tags https://developers.facebook.com/docs/sharing/webmasters#markup
 
 - what's going on at merkha-tipkha-merkha-tipkha? (gone sometimes…)
 - what's going on in telishaketana-tipkha?
