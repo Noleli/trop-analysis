@@ -15,25 +15,25 @@ x initial graph loading state (0 high)
 x window resizing
 x scrollbars in firefox
 x transitions for tree (reshuffle columns?)
-- stats/tracking
+x stats/tracking
 x minify data and try to split it up for parallel loading
-- clean up stress-only doublings (like pashta-pashta pashta-pashta)
+x clean up stress-only doublings (like pashta-pashta pashta-pashta)
 - add row-multiplied probabilities (global rather than conditional)
 - width adjusting can be weird. and needs to take into account the horizontal scrollbar for some reason
 x individual psukim: add metadata to popovers
 x individual psukim: tweak css
 x individual psukim: loading animation before api works
-- 10 commandments
+x 10 commandments
 x click affordance, something on hover
 x hebrew axis labels
 - y axis label
-- can't get psukim for sof pasuk (and maybe others) for shmot 20
+x can't get psukim for sof pasuk (and maybe others) for shmot 20
 x write up intro text in a tab of the modal
 x center tooltip over bar and increase left margin
 x search from beginning of pasuk: what should happen if you've clicked a node whose ancestry doesn't exist in the other state?
 - aggregate by parsha
 - colorcode conjunctive/disjunctive
-- add facebook tags https://developers.facebook.com/docs/sharing/webmasters#markup
+x add facebook tags https://developers.facebook.com/docs/sharing/webmasters#markup
 
 - what's going on at merkha-tipkha-merkha-tipkha? (gone sometimes…)
 - what's going on in telishaketana-tipkha?

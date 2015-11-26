@@ -4,7 +4,7 @@
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>Trop sequence tree</title>
+        <title>Quantified Cantillation &ndash; Trop Sequence Explorer</title>
 
         <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet">
         <link href="style.css" rel="stylesheet">
@@ -13,7 +13,15 @@
         <script type="text/javascript" src="jquery.min.js"></script>
         <script type="text/javascript" src="bootstrap/js/bootstrap.min.js"></script>
         <script type="text/javascript" src="js.cookie.js"></script>
-        <!-- // <script type="text/javascript" src="jquery.easyModal.js"></script> -->
+
+        <meta property="og:url"                content="http://quantifiedcantillation.nl/" />
+        <meta property="og:type"               content="website" />
+        <meta property="og:title"              content="Quantified Cantillation – Trop Sequence Explorer" />
+        <meta property="og:description"        content="Explore trop sequences in the Torah with conditional transition probabilities." />
+        <meta property="og:image"              content="http://quantifiedcantillation.nl/fbpreview.png?v2" />
+        <meta property="og:image:width"        content="2154" />
+        <meta property="og:image:height"       content="1280" />
+
     </head>
     <body dir="rtl">
 
@@ -34,7 +42,7 @@
                         <div class="tab-content">
                             <div role="tabpanel" class="tab-pane active" id="about">
                                 <h5>What</h5>
-                                <p>Ever wondered whether there were more <span class="trop">זַרְקָא֮ סְגוֹל֒</span> or <span class="trop">זַרְקָא֮ מֻנַּ֣ח סְגוֹל֒</span>? Of course you have.</p>
+                                <p>Ever wondered whether there were more instances of <span class="trop">זַרְקָא֮ סְגוֹל֒</span> or <span class="trop">זַרְקָא֮ מֻנַּ֣ח סְגוֹל֒</span>? Of course you have.</p>
                                 <p>From any <em>trop</em>, click to find out what <em>trop</em> can come next, and what the transition probability is.</p>
                                 <p id="explanation"><img src="explanation.png"></p>
 
@@ -53,7 +61,7 @@
                             return false;" title="Reveal this e-mail address">email me</a>.</p>
 
                                 <h5>Credits</h5>
-                                <p>Trop data is extracted from <a href="http://tanach.us/">Tanach.us</a>. <em>Pasuk</em> text is from <a href="http://www.sefaria.org/">Sefaria</a>. Built with <a href="http://d3js.org/">D3</a>.</p>
+                                <p><em>Trop</em> data is extracted from <a href="http://tanach.us/">Tanach.us</a>. <em>Pasuk</em> text is from <a href="http://www.sefaria.org/">Sefaria</a>. Built with <a href="http://d3js.org/">D3</a>.</p>
 
                                 <p><a class="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">
                                     <svg version="1.0" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
@@ -136,7 +144,9 @@
                                             </g>
                                         </g>
                                     </svg>
-                                </a> <a href="https://github.com/Noleli/trop-analysis">Fork it</a>.</p>
+                                </a>
+                                </p>
+                                <p><a href="https://github.com/Noleli/trop-analysis">Fork it</a>.</p>
                             </div>
                             <div role="tabpanel" class="tab-pane" id="settings">
                                 <h5>Bar graph shows</h5>
