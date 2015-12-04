@@ -306,6 +306,8 @@ function nodeclick(d) {
     var ancestorstring;
     var collapsingroot = false;
     
+
+    // var maxclickeddepth = d3.max(nodes.filter(function(d) { return d.clicked }).map(function(d) { return d.depth }));
     nodes = nodes.filter(function(n) {
         if(n.depth > d.depth) {
             collapse(n);
@@ -313,11 +315,14 @@ function nodeclick(d) {
         return n.depth <= d.depth;
     });
 
-    var maxdepth = d3.max(nodes.map(function(d) { return d.depth }));
-    if(d.depth == 0 && d.clicked && maxdepth == 0) {
+    // console.log(maxclickeddepth, d.depth);
+    // TODO: gah what should the right behavior be here?
+    if(d.children) {
         nodes.forEach(function(n) {
-            n.clicked = false;
-            n.disabled = false;
+            if(n.depth == d.depth) {
+                n.clicked = false;
+                n.disabled = false;
+            }
         });
         d.clicked = false;
         d.disabled = false;
@@ -755,7 +760,7 @@ function graphclick(d) {
 
     var textlist = [];
     // http://www.sefaria.org/api/texts/Exodus.16?lang=he&commentary=0&context=0
-    d3.jsonp("http://www.sefaria.org/api/texts/" + linkformat(d.key) + "?lang=he&commentary=0&context=0&callback={callback}", function(r) {
+    d3.jsonp("//www.sefaria.org/api/texts/" + linkformat(d.key) + "?lang=he&commentary=0&context=0&callback={callback}", function(r) {
         textlist = d3.map(r.he.map(function(t,p) { return {'pasuk': p+1, 'text': t}}), function(p) { return p.pasuk });
         // console.log(textlist);
         d3.select("#detailsContainer").html('<table id="details"></div>');
