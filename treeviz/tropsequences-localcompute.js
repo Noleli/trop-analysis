@@ -316,8 +316,10 @@ function nodeclick(d) {
     });
 
     // console.log(maxclickeddepth, d.depth);
+    var maxdepth = d3.max(nodes.map(function(d) { return d.depth }));
+    if(d.depth == 0 && d.clicked && maxdepth == 0) {
     // TODO: gah what should the right behavior be here?
-    if(d.children) {
+    // if(d.children) {
         nodes.forEach(function(n) {
             if(n.depth == d.depth) {
                 n.clicked = false;
