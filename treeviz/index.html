@@ -155,7 +155,7 @@
                                     <div class="radio">
                                         <label>
                                             <input type="radio" class="graphValues" name="graphValues" id="pref_norm" value="norm" data-value="norm" checked>
-                                            Number of sequence occurences, normalized by the number of <em>p'sukim</em> in a <em>perek</em>
+                                            Number of sequence occurences, normalized by the number of <em>p’sukim</em> in a <em>perek</em>
                                         </label>
                                     </div>
                                     <div class="radio">
@@ -209,8 +209,17 @@
                         <h4 class="modal-title" id="detailsModalLabel"></h4>
                         <div id="currentSearch"></div>
                     </div>
-                    <div class="modal-body">
-                        <div id="detailsContainer"></div>
+                    <div class="modal-body text-center">
+                        <!-- <div id="detailsContainer"></div> -->
+                        <div class="btn-group" role="tablist">
+                            <button class="btn btn-default btn-sm btn-primary" href="#in" aria-controls="in" role="tab" data-toggle="tab">P’sukim with the sequence</button>
+                            <button class="btn btn-default btn-sm" href="#not-in" id="tab-not-in" aria-controls="not-in" role="tab" data-toggle="tab">P’sukim without the sequence</button>
+                        </div>
+
+                        <div class="tab-content text-right">
+                            <div role="tabpanel" class="details tab-pane active" id="in"></div>
+                            <div role="tabpanel" class="details tab-pane" id="not-in"></div>
+                        </div>
                     </div>
                     <!--<div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -222,7 +231,7 @@
         <!-- Piwik -->
         <script type="text/javascript">
           var _paq = _paq || [];
-          _paq.push(["setCookieDomain", "*.projects.noahliebman.net"]);
+          _paq.push(["setCookieDomain", "*.quantifiedcantillation.nl"]);
           _paq.push(['trackPageView']);
           _paq.push(['enableLinkTracking']);
           (function() {

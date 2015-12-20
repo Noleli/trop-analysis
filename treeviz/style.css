@@ -154,7 +154,7 @@ svg {
     float: left;
 }*/
 
-#details {
+.details {
     /*width: 100%;
     height: 100%;
     overflow-y: scroll;*/
@@ -170,7 +170,7 @@ svg {
     margin-right: 18px;
 }
 
-#details .pasuknum {
+.details .pasuknum {
     font-size: 16px;
     /*font-weight: bold;*/
     padding-left: 12px;
@@ -178,7 +178,7 @@ svg {
     text-align: left;
 }
 
-#details tr {
+.details tr {
     vertical-align: top;
 }
 

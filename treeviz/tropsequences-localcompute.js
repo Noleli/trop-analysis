@@ -734,6 +734,8 @@ function dotooltip(d) {
 // });
 function graphclick(d) {
     var pasuklist = disaggregated.filter(function(p) { return p.sefer == d.values.sefer && p.perek == d.values.perek && p.count > 0 });
+    var outpasuklist = disaggregated.filter(function(p) { return p.sefer == d.values.sefer && p.perek == d.values.perek && p.count == 0 });
+    // console.log(outpasuklist);
     // console.log(pasuklist);
     /*var detailsDiv = d3.select("#detailoutercontainer").append("div")
         .attr("id", "detailcontainer")
@@ -764,11 +766,15 @@ function graphclick(d) {
     // http://www.sefaria.org/api/texts/Exodus.16?lang=he&commentary=0&context=0
     d3.jsonp("//www.sefaria.org/api/texts/" + linkformat(d.key) + "?lang=he&commentary=0&context=0&callback={callback}", function(r) {
         textlist = d3.map(r.he.map(function(t,p) { return {'pasuk': p+1, 'text': t}}), function(p) { return p.pasuk });
-        // console.log(textlist);
-        d3.select("#detailsContainer").html('<table id="details"></div>');
+        d3.select("#in").html('<table id="indetails"></div>');
+        d3.select("#not-in").html('<table id="outdetails"></div>');
         pasuklist.forEach(function(p) {
             // console.log(p.pasuk, textlist.get(p.pasuk));
-            d3.select("#details").append("tr").html("<td class='pasuknum'>" + p.pasuk + "</td><td class='pasuktext'>" + textlist.get(p.pasuk).text + "</td>"); //p.sefer + " " + p.perek + " " + p.pasuk);
+            d3.select("#indetails").append("tr").html("<td class='pasuknum'>" + p.pasuk + "</td><td class='pasuktext'>" + textlist.get(p.pasuk).text + "</td>"); //p.sefer + " " + p.perek + " " + p.pasuk);
+        });
+        outpasuklist.forEach(function(p) {
+            // console.log(p.pasuk);
+            d3.select("#outdetails").append("tr").html("<td class='pasuknum'>" + p.pasuk + "</td><td class='pasuktext'>" + textlist.get(p.pasuk).text + "</td>");
         });
         // $("#detailoutercontainer").trigger("openModal");
     });
@@ -865,6 +871,11 @@ d3.select("#cog")
     .style({"top": (window.innerHeight - graphHeight - 48) + "px"});
 
 $("#cog").click(function() { $("#tab-settings").tab("show") });
+
+$("button[role=tab]").click(function() {
+    $("button[role=tab]").removeClass("btn-primary");
+    $(this).addClass("btn-primary");
+});
 
 if(Cookies.get("firstload") != "no") {
     $("#prefs").modal("show");
