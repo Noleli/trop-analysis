@@ -484,7 +484,9 @@ function nodeclick(d) {
 
     if(d.children != null) {
         if(d.children.length == 1) {
-            nodeclick(d.children[0]);
+            if(d.name !== "sofpasuk") {
+                nodeclick(d.children[0]);
+            }
         }
     }
     // if(d._children != null) {
